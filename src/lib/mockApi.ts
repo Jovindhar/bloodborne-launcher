@@ -34,6 +34,12 @@ const config: Config = {
     extra_env: "",
     // ?lang=en sets the launcher language in the browser preview (screenshots).
     ui_language: new URLSearchParams(window.location.search).get("lang") ?? "",
+    online: false,
+    online_server: "",
+    online_npid: "",
+    online_coop: true,
+    online_upnp: true,
+    online_local_server: "auto",
   },
   ini: { upscaler: "fsr3", preset: "2", sharpen: "1", sharpness: "0.50", object_motion: "0", show_fps: "1", output_res: "1920x1080", aspect_ratio: "16:9" },
   paths: {
@@ -70,6 +76,8 @@ let patches: Patch[] = [
 ];
 
 let fsr411Files = false;
+// Online IDs with a saved password (the Keychain in the app).
+const onlinePasswords = new Set<string>();
 const wait = <T,>(value: T) => new Promise<T>((resolve) => setTimeout(() => resolve(value), 120));
 
 let nextProfile = 0;
@@ -170,6 +178,10 @@ export const mockApi = {
     ]),
   fsr411Support: () => wait<Fsr411Support>({ supported: fsr411Files, reason: fsr411Files ? "" : "AMD's FSR 4.1.1 initializers.bin is missing" }),
   addFsr411Files: (_dll: string) => wait(void (fsr411Files = true)),
+  onlinePasswordSaved: (npid: string) => wait(onlinePasswords.has(npid.trim())),
+  setOnlinePassword: (npid: string, password: string) =>
+    !npid.trim() ? Promise.reject("Set the Online ID first.")
+      : wait(void (password ? onlinePasswords.add(npid.trim()) : onlinePasswords.delete(npid.trim()))),
   readInput: (kind: "key" | "pad") => wait(kind === "pad" ? "rightshoulder" : "G"),
   openLauncherData: () => wait(undefined),
   openPath: () => wait(undefined),

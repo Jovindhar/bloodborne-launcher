@@ -5,6 +5,7 @@ export * from "@/pages/graphics";
 export * from "@/pages/home";
 export * from "@/pages/log";
 export * from "@/pages/mods";
+export * from "@/pages/online";
 export * from "@/pages/patches";
 export * from "@/pages/saves";
 export * from "@/pages/profiles";

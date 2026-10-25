@@ -347,6 +347,7 @@ name = "bloodborne-launcher"
 version = "0.8.3"
 dependencies = [
  "reqwest",
+ "security-framework",
  "semver",
  "serde",
  "serde_json",

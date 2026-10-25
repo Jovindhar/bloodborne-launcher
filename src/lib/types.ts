@@ -36,6 +36,17 @@ export type Settings = {
   extra_env: string;
   /** Launcher language ("" = the system's). */
   ui_language: string;
+  /** Online play (BB_ONLINE): Seamless Hunt's servers, with the Online ID below. */
+  online: boolean;
+  /** The shadNet server ("" = Seamless Hunt's, play.seamlesshunt.com:31313). */
+  online_server: string;
+  /** The Online ID (BB_SHADNET_NPID); its password is in the macOS Keychain. */
+  online_npid: string;
+  /** BBSC seamless co-op (BB_BBSC). */
+  online_coop: boolean;
+  online_upnp: boolean;
+  /** BBSC's game server on this computer (BB_BBSC_LOCAL_SERVER). */
+  online_local_server: "auto" | "on" | "off";
 };
 
 /** The game folder's edition, from its sce_sys/param.sfo (scripts/game_check.py describe). */

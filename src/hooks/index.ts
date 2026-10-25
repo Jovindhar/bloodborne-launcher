@@ -7,6 +7,7 @@ export * from "@/hooks/useGamepads";
 export * from "@/hooks/useIni";
 export * from "@/hooks/useLanguageSync";
 export * from "@/hooks/useMods";
+export * from "@/hooks/useOnlinePassword";
 export * from "@/hooks/usePatches";
 export * from "@/hooks/useSetting";
 export * from "@/hooks/useSettingsData";

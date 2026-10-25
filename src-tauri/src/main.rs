@@ -20,6 +20,7 @@ mod tray;
 mod game_lifecycle;
 mod updates;
 mod settings_store;
+mod online;
 
 use serde::Serialize;
 use serde_json::{json, Map, Value};
@@ -139,7 +140,9 @@ fn default_settings() -> Map<String, Value> {
         "extra_env": "",
         "ui_language": ""
     });
-    v.as_object().cloned().unwrap_or_default()
+    let mut settings = v.as_object().cloned().unwrap_or_default();
+    settings.extend(online::defaults().as_object().cloned().unwrap_or_default());
+    settings
 }
 
 /// bbport.ini values the launcher shows before the file has them (macOS defaults).
@@ -380,6 +383,9 @@ fn save_settings(app: AppHandle, state: State<AppState>, settings: Map<String, V
     }
     if settings.get("hide_launcher").is_some_and(|v| !v.is_boolean()) {
         return Err("hide_launcher must be a boolean.".into());
+    }
+    if let Some(problem) = online::check(&settings) {
+        return Err(problem);
     }
     let sent: String = settings
         .iter()
@@ -836,6 +842,10 @@ fn game_environment(p: &Paths, s: &Map<String, Value>) -> Result<Vec<(String, St
     if bool_setting(s, "gpu_profile") {
         set("BB_GPU_PROFILE", "1".into());
     }
+    // Online play: the account's password comes from the Keychain (extra_env can still override).
+    for (k, v) in online::environment(s, online::password(str_setting(s, "online_npid").trim())) {
+        set(&k, v);
+    }
     for item in str_setting(s, "extra_env").split_whitespace() {
         if let Some((k, v)) = item.split_once('=') {
             set(k, v.to_string());
@@ -980,6 +990,18 @@ fn start_game(app: &AppHandle, state: &AppState) -> Result<(), String> {
     Ok(())
 }
 
+/// Whether the Online ID has a saved password (the password itself never goes to the window).
+#[tauri::command]
+async fn online_password_saved(npid: String) -> Result<bool, String> {
+    blocking(move || Ok(online::password(npid.trim()).is_some())).await
+}
+
+/// Saves the Online ID's password in the Keychain; an empty one forgets it.
+#[tauri::command]
+async fn set_online_password(npid: String, password: String) -> Result<(), String> {
+    blocking(move || online::set_password(npid.trim(), Some(&password))).await
+}
+
 #[tauri::command]
 fn stop(state: State<AppState>) -> Result<(), String> {
     let game = state.game.lock().map_err(|e| e.to_string())?;
@@ -1028,7 +1050,7 @@ fn main() {
             updates::check_release,
             updates::open_release,
             load_config, save_settings, save_ini, check_game, list_mods, save_mods, list_patches,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, online_password_saved, set_online_password, list_saves, list_characters, edit_character, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {
