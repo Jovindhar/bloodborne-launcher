@@ -5,9 +5,11 @@ use serde::{Deserialize, Serialize};
 use std::{cmp::Ordering, time::Duration};
 use tauri_plugin_opener::OpenerExt;
 
+// The online build (BloodOnline) is released from Jovindhar/bloodborne-mac (branch online-bbnet20):
+// an upstream release has no online module, so it is not offered as an update.
 const RELEASES: &str =
-    "https://api.github.com/repos/bloodborne-native/bloodborne-mac/releases/latest";
-const RELEASE_PAGE: &str = "https://github.com/bloodborne-native/bloodborne-mac/releases/tag/";
+    "https://api.github.com/repos/Jovindhar/bloodborne-mac/releases/latest";
+const RELEASE_PAGE: &str = "https://github.com/Jovindhar/bloodborne-mac/releases/tag/";
 const MAX_RESPONSE: usize = 512 * 1024;
 
 #[derive(Deserialize)]
