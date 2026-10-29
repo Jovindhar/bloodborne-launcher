@@ -17,7 +17,7 @@ type Props = {
 export function SliderRow({ title, description, value, min, max, step, onChange, format, disabled }: Props) {
   return (
     <SettingRow title={title} description={description} disabled={disabled}>
-      <div className="w-48">
+      <div className="w-full flex-1 sm:w-48 sm:flex-none">
         <Slider
           min={min}
           max={max}

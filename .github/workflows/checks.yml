@@ -19,10 +19,22 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm run build
+  # The backend. Releases are macOS-only for now, so pushes check macOS; a manual run (Actions →
+  # Checks → Run workflow, or gh workflow run checks.yml) also checks Linux and Windows
+  # (platform.rs holds what differs).
   native:
-    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ github.event_name == 'workflow_dispatch' && fromJSON('["macos-15", "ubuntu-24.04", "windows-latest"]') || fromJSON('["macos-15"]') }}
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - name: Linux libraries (WebKitGTK, tray)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri

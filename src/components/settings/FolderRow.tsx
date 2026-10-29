@@ -1,10 +1,8 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { open } from "@tauri-apps/plugin-dialog";
-import { FolderOpen, FolderSearch, RotateCcw } from "lucide-react";
-import { Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui";
+import { RotateCcw } from "lucide-react";
+import { FolderActions, IconAction } from "@/components/common";
 import { SettingRow } from "@/components/settings/SettingRow";
-import { api } from "@/lib";
 
 type Props = {
   title: ReactNode;
@@ -18,13 +16,9 @@ type Props = {
   onReset?: () => void;
 };
 
-/** A folder: its path, a chooser, Reveal in Finder, and back to the default. */
+/** A folder: its path, a chooser, showing it in the file manager, and back to the default. */
 export function FolderRow({ title, description, path, custom, onChoose, onReset }: Props) {
   const { t } = useTranslation();
-  const choose = async () => {
-    const picked = await open({ directory: true, defaultPath: path || undefined, title: String(title) });
-    if (typeof picked === "string") onChoose?.(picked);
-  };
   return (
     <SettingRow
       title={title}
@@ -37,25 +31,8 @@ export function FolderRow({ title, description, path, custom, onChoose, onReset 
         </>
       }
     >
-      {onChoose && (
-        <Button variant="secondary" size="sm" onClick={choose}>
-          <FolderSearch /> {t("common.choose")}
-        </Button>
-      )}
-      <Tooltip>
-        <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => api.openPath(path)} disabled={!path} />}>
-          <FolderOpen />
-        </TooltipTrigger>
-        <TooltipContent>{t("common.showInFinder")}</TooltipContent>
-      </Tooltip>
-      {onReset && custom && (
-        <Tooltip>
-          <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={onReset} />}>
-            <RotateCcw />
-          </TooltipTrigger>
-          <TooltipContent>{t("common.useDefault")}</TooltipContent>
-        </Tooltip>
-      )}
+      <FolderActions path={path} title={String(title)} onChoose={onChoose} />
+      {onReset && custom && <IconAction label={t("common.useDefault")} onClick={onReset}><RotateCcw /></IconAction>}
     </SettingRow>
   );
 }

@@ -9,10 +9,10 @@ export function BindingList({ kind }: { kind: "pad" | "key" }) {
     <div>
       {CONTROL_GROUPS.map((group) => (
         <div key={group}>
-          <div className="bg-night-900/60 px-5 py-2 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="px-5 pb-1 pt-4 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
             {t(`controls.groups.${group}`)}
           </div>
-          <div className="divide-y divide-border">
+          <div>
             {CONTROLS.filter((c) => c.group === group).map((control) => (
               <BindingRow key={control.id} control={control} kind={kind} />
             ))}

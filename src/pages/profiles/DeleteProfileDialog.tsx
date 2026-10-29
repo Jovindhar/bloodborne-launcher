@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription,
   AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, Button } from "@/components/ui";
 import type { SaveProfile } from "@/lib";
+import { Message } from "@/components/common";
 
 export function DeleteProfileDialog({ profile, active, disabled, busy, onDelete }: {
   profile: SaveProfile;
@@ -33,7 +34,7 @@ export function DeleteProfileDialog({ profile, active, disabled, busy, onDelete 
           <AlertDialogTitle>{t("profiles.deleteTitle", { name: profile.name })}</AlertDialogTitle>
           <AlertDialogDescription>{t("profiles.deleteHint", { name: profile.name })}</AlertDialogDescription>
         </AlertDialogHeader>
-        {error && <p role="alert" className="break-words text-sm text-destructive">{error}</p>}
+        {error && <Message tone="error">{error}</Message>}
         <AlertDialogFooter>
           <AlertDialogCancel ref={cancel} disabled={busy}>{t("saves.cancel")}</AlertDialogCancel>
           <AlertDialogAction variant="destructive" disabled={disabled || active} onClick={async () => {

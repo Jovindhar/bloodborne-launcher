@@ -1,37 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib";
-import { SettingsSection } from "@/components/settings";
-import { EditCharacterDialog } from "@/pages/saves/EditCharacterDialog";
+import { Message } from "@/components/common";
+import { CharacterCard } from "@/pages/saves/CharacterCard";
 
+/** The save set's characters, each as a card. */
 export function CharacterPreview({ profileId, running }: { profileId: string; running: boolean }) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { data, error, isPending } = useQuery({
     queryKey: ["characters", profileId, running],
     queryFn: () => api.listCharacters(profileId),
     enabled: !running,
     staleTime: 0,
   });
-  const number = (value: number) => value.toLocaleString(i18n.language);
-  return <SettingsSection title={t("saves.editor")} description={t("saves.characterPreviewHint")}>
-    {running ? <p className="px-5 py-4 text-sm text-muted-foreground">{t("saves.stopFirst")}</p>
-      : error ? <p role="alert" className="px-5 py-4 text-sm text-destructive">{String(error)}</p>
-      : isPending ? <p className="px-5 py-4 text-sm text-muted-foreground">{t("saves.readingCharacters")}</p>
-      : !data?.length ? <p className="px-5 py-4 text-sm text-muted-foreground">{t("saves.noCharacters")}</p>
-      : data.map((character) => <div key={`${character.title_id}:${character.slot}`} className="border-t border-border px-5 py-4 first:border-t-0">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="font-medium">{character.name}</h3>
-          <span className="text-xs text-muted-foreground">{character.title_id} · {t("saves.slot", { slot: character.slot + 1 })}</span>
-        </div>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t("saves.level", { level: character.level })} · {t("saves.playtime", { hours: (character.playtime_ms / 3_600_000).toLocaleString(i18n.language, { maximumFractionDigits: 1 }) })} · {t("saves.newGameCycle", { cycle: character.new_game_cycle + 1 })}
-        </p>
-        <dl className="mt-3 grid grid-cols-2 gap-x-5 gap-y-1 text-sm sm:grid-cols-3">
-          {(["vitality", "endurance", "strength", "skill", "bloodtinge", "arcane", "echoes", "insight"] as const).map((field) =>
-            <div key={field} className="flex justify-between gap-2"><dt className="text-muted-foreground">{t(`saves.${field}`)}</dt><dd>{number(character[field])}</dd></div>)}
-        </dl>
-        {!character.stats_consistent && <p className="mt-3 text-xs text-destructive">{t("saves.inconsistentStats")}</p>}
-        <div className="mt-4"><EditCharacterDialog profileId={profileId} character={character} disabled={running} /></div>
-      </div>)}
-  </SettingsSection>;
+  const note = (text: string) => <p className="rounded-2xl surface px-5 py-4 text-sm text-muted-foreground">{text}</p>;
+  return <div className="mb-5 space-y-4">
+    {running ? note(t("saves.stopFirst"))
+      : error ? <Message tone="error" className="rounded-2xl surface px-5 py-4">{String(error)}</Message>
+      : isPending ? note(t("saves.readingCharacters"))
+      : !data?.length ? note(t("saves.noCharacters"))
+      : data.map((character) => <CharacterCard key={`${character.title_id}:${character.slot}`} character={character} disabled={running} />)}
+  </div>;
 }

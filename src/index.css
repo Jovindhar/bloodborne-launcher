@@ -6,35 +6,39 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* The launcher has one theme: night and blood. shadcn's tokens map onto it. */
+/* The launcher has one theme: night, gold and blood. shadcn's tokens map onto it. The game's
+   overlay uses the same values (bloodborne-runtime gpu/shim/bbport_overlay.cpp, namespace Theme):
+   change both together. The darks are blue slate; gold marks headings, the current place and
+   focus; rust (an old, dulled red) is Play and primary actions; the brighter blood red is for
+   warnings and errors. */
 :root {
   --radius: 0.75rem;
-  --background: #07060a;
-  --foreground: #efe6d2;
-  --card: #15121c;
-  --card-foreground: #efe6d2;
-  --popover: #1a1622;
-  --popover-foreground: #efe6d2;
-  --primary: #b3262b;
+  --background: #07090d;
+  --foreground: #ece4d4;
+  --card: #0e1218;
+  --card-foreground: #ece4d4;
+  --popover: #131820;
+  --popover-foreground: #ece4d4;
+  --primary: #7a2a26;
   --primary-foreground: #f6eedd;
-  --secondary: #1f1a29;
-  --secondary-foreground: #efe6d2;
-  --muted: #1f1a29;
-  --muted-foreground: #9a93a6;
-  --accent: #2b2438;
-  --accent-foreground: #efe6d2;
+  --secondary: #161b23;
+  --secondary-foreground: #ece4d4;
+  --muted: #161b23;
+  --muted-foreground: #979ba4;
+  --accent: #1f2530;
+  --accent-foreground: #ece4d4;
   --destructive: #e25757;
   --border: rgb(255 255 255 / 0.07);
   --input: rgb(255 255 255 / 0.12);
-  --ring: #c53030;
-  --sidebar: #0d0b12;
-  --sidebar-foreground: #efe6d2;
-  --sidebar-primary: #b3262b;
+  --ring: #c9a265;
+  --sidebar: #0a0d12;
+  --sidebar-foreground: #ece4d4;
+  --sidebar-primary: #7a2a26;
   --sidebar-primary-foreground: #f6eedd;
-  --sidebar-accent: rgb(161 29 34 / 0.18);
-  --sidebar-accent-foreground: #efe6d2;
+  --sidebar-accent: rgb(201 162 101 / 0.1);
+  --sidebar-accent-foreground: #ece4d4;
   --sidebar-border: rgb(255 255 255 / 0.06);
-  --sidebar-ring: #c53030;
+  --sidebar-ring: #c9a265;
 }
 
 @theme inline {
@@ -67,16 +71,23 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --color-night-950: #07060a;
-  --color-night-900: #0d0b12;
-  --color-night-800: #15121c;
-  --color-night-700: #1f1a29;
-  --color-night-600: #2b2438;
+  --color-night-950: #07090d;
+  --color-night-900: #0a0d12;
+  --color-night-800: #0e1218;
+  --color-night-700: #161b23;
+  --color-night-600: #1f2530;
+  --color-rust-400: #a24a3f;
+  --color-rust-500: #7a2a26;
+  --color-rust-600: #5f201e;
+  --color-rust-700: #461615;
+  --color-gold-300: #e3c891;
+  --color-gold-400: #c9a265;
+  --color-gold-600: #8a6d3f;
   --color-blood-400: #e25757;
   --color-blood-500: #c53030;
   --color-blood-600: #a11d22;
   --color-blood-700: #7a1418;
-  --color-parchment: #efe6d2;
+  --color-parchment: #ece4d4;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -97,7 +108,7 @@
     @apply bg-background font-sans text-foreground antialiased select-none;
   }
   ::selection {
-    @apply bg-blood-600/60;
+    @apply bg-gold-600/50;
   }
   ::-webkit-scrollbar {
     width: 10px;
@@ -107,6 +118,32 @@
     @apply rounded-full bg-night-600;
     border: 3px solid transparent;
     background-clip: padding-box;
+  }
+}
+
+/* Surfaces, defined once: panels (cards, setting sections, alerts) are borderless and translucent
+   over the page; insets are wells inside them (a tile, the log, group headings); raised is a
+   control that sits on the sidebar. */
+@utility surface {
+  background-color: color-mix(in oklab, var(--card) 55%, transparent);
+  backdrop-filter: blur(4px);
+}
+@utility surface-inset {
+  background-color: color-mix(in oklab, var(--sidebar) 65%, transparent);
+}
+@utility surface-raised {
+  background-color: rgb(255 255 255 / 0.04);
+}
+
+/* A list or panel that scrolls on its own (the save editor): as tall as the window leaves under
+   the page's title, tabs and save bar; narrow windows also leave the top strip and bottom bar. */
+@utility own-scroll {
+  max-height: calc(100dvh - 22rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  @media (width < 48rem) {
+    max-height: calc(100dvh - 30rem - env(safe-area-inset-bottom));
+    min-height: 12rem;
   }
 }
 

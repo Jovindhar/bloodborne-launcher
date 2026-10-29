@@ -160,7 +160,11 @@ mod tests {
     }
     impl Drop for Fixture {
         fn drop(&mut self) {
-            fs::remove_dir_all(&self.0).unwrap();
+            // Windows keeps the database's files locked while a pooled connection lingers.
+            let result = fs::remove_dir_all(&self.0);
+            if !cfg!(windows) {
+                result.unwrap();
+            }
         }
     }
     #[test]

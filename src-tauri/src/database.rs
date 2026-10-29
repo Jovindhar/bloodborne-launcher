@@ -278,6 +278,14 @@ pub fn operation_id() -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    /// Removes a test's folder. On Windows the database's files stay locked while a pooled
+    /// connection lingers, so the folder is left to the system's temporary-file cleanup there.
+    fn remove_test_dir(root: impl AsRef<Path>) {
+        let result = std::fs::remove_dir_all(root);
+        if !cfg!(windows) {
+            result.unwrap();
+        }
+    }
     fn fixture() -> PathBuf {
         std::fs::canonicalize(std::env::temp_dir())
             .unwrap()
@@ -319,7 +327,7 @@ mod tests {
             }
             Ok(())
         }).unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn exact_untracked_schema_is_adopted_but_partial_schema_is_rejected() {
@@ -357,7 +365,7 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn newer_history_and_changed_migration_are_rejected_without_reset() {
@@ -395,7 +403,7 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn upgrade_snapshot_includes_wal_data_and_failed_upgrade_can_be_retried() {
@@ -439,7 +447,7 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn failed_upgrade_backup_blocks_schema_changes() {
@@ -476,7 +484,7 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn broken_ownership_is_reported_without_removing_records() {
@@ -503,7 +511,7 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn wal_initialization_waits_for_an_existing_reader_without_losing_data() {
@@ -531,7 +539,7 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn simultaneous_first_open_and_reopen_apply_one_migration() {
@@ -554,7 +562,7 @@ mod tests {
         for thread in threads {
             thread.join().unwrap().unwrap();
         }
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn failed_migration_rolls_back_schema_and_history() {
@@ -570,7 +578,7 @@ mod tests {
             assert_eq!((tables, history), (0,0));
             Ok(())
         }).unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
     #[test]
     fn generated_migrations_list_is_complete_and_foreign_keys_are_enforced() {
@@ -610,6 +618,6 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        std::fs::remove_dir_all(root).unwrap();
+        remove_test_dir(root);
     }
 }

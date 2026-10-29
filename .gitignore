@@ -6,7 +6,8 @@ dist/
 
 # Tauri / Rust
 src-tauri/target/
-src-tauri/gen/
+src-tauri/gen/*
+!src-tauri/gen/apple/
 
 # Editors and macOS
 .DS_Store

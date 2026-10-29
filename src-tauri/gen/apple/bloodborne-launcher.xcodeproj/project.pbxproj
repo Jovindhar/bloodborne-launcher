@@ -1,0 +1,502 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2ECF3ED589DD605B9473BA81 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC31C9D5DE075F166DD4407 /* CoreGraphics.framework */; };
+		62683BF71C7200724004682B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 202399FA33EDDB9EFCBD6EDF /* QuartzCore.framework */; };
+		74ED196703A7E6789B131780 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCE4455D7F3A146282FDE61E /* MetalKit.framework */; };
+		79B302FC21F9D32AE43DBA37 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB70DA3773492B9B9141EC10 /* Security.framework */; };
+		7EA5AC93E962D9A40C86C6CE /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7384149D2B658379245F0F13 /* WebKit.framework */; };
+		A71791E7DCED4429985A21D3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 0B8744F2C3F20B99730634EF /* assets */; };
+		C94F6003AA76628249EBAFCD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1F98C00D1A15C941350BCE0 /* LaunchScreen.storyboard */; };
+		D48AD234BD3113FBA266E464 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDE8073FCBB47DBFD47014CE /* Metal.framework */; };
+		E7BBD860D7481EFCED2ECE5A /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EF7AD6549176B5D3C817867 /* libapp.a */; };
+		E818CCAFC91EC359D66F1182 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = EC575143B360F1B4FF267AF9 /* main.mm */; };
+		F5EAB9357FFB42147D570E3B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5425488B3C1322B8CCB120D8 /* UIKit.framework */; };
+		F88BC0C36338B1A99444AC64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43AB0868B71DACED666A0DBD /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0B8744F2C3F20B99730634EF /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		19072ACEF41FA8B69487984F /* game_lifecycle.rs */ = {isa = PBXFileReference; path = game_lifecycle.rs; sourceTree = "<group>"; };
+		1EF7AD6549176B5D3C817867 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		202399FA33EDDB9EFCBD6EDF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		265684301A95ACC945ACD692 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2C40BFB80973D2E5C2B55E29 /* character_growth.rs */ = {isa = PBXFileReference; path = character_growth.rs; sourceTree = "<group>"; };
+		43AB0868B71DACED666A0DBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		495E5E4CD34A4A14A4E45472 /* profiles.rs */ = {isa = PBXFileReference; path = profiles.rs; sourceTree = "<group>"; };
+		5425488B3C1322B8CCB120D8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		581CCAAEC9800ED3A27086D3 /* save_editor.rs */ = {isa = PBXFileReference; path = save_editor.rs; sourceTree = "<group>"; };
+		651DFF0BDB5397C1C6605457 /* tray_mobile.rs */ = {isa = PBXFileReference; path = tray_mobile.rs; sourceTree = "<group>"; };
+		67028C8FBF9E78ABDF9AB663 /* tray.rs */ = {isa = PBXFileReference; path = tray.rs; sourceTree = "<group>"; };
+		67D169B324B4621F9FC1545F /* trophy_catalog.rs */ = {isa = PBXFileReference; path = trophy_catalog.rs; sourceTree = "<group>"; };
+		69598F97B1CC0FBD435EEC34 /* online_password.rs */ = {isa = PBXFileReference; path = online_password.rs; sourceTree = "<group>"; };
+		7384149D2B658379245F0F13 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		7916C5DB3705EBD543B57DC8 /* bloodborne-launcher_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "bloodborne-launcher_iOS.entitlements"; sourceTree = "<group>"; };
+		836E8D2088689C70D87A2049 /* saves.rs */ = {isa = PBXFileReference; path = saves.rs; sourceTree = "<group>"; };
+		8E4C19133F7923878B8FCDEB /* trophies.rs */ = {isa = PBXFileReference; path = trophies.rs; sourceTree = "<group>"; };
+		A06E68FD0E7DBECEFA2E4C68 /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		B1F98C00D1A15C941350BCE0 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B6B4B9B4CA84917EF7C5E087 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		BAC31C9D5DE075F166DD4407 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		BDE8073FCBB47DBFD47014CE /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		BE121E4902F85DA16BD7732C /* database.rs */ = {isa = PBXFileReference; path = database.rs; sourceTree = "<group>"; };
+		DB0C4D73397483B5BFD9F304 /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		DBCF112A05C6159C38C23994 /* updates.rs */ = {isa = PBXFileReference; path = updates.rs; sourceTree = "<group>"; };
+		EB70DA3773492B9B9141EC10 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		EC575143B360F1B4FF267AF9 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		ED6E7B9B337FA89B92F48A9D /* platform.rs */ = {isa = PBXFileReference; path = platform.rs; sourceTree = "<group>"; };
+		ED77F61887AAB7434F4CE755 /* bloodborne-launcher_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "bloodborne-launcher_iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3840E09EF2C0CD06026D242 /* settings_store.rs */ = {isa = PBXFileReference; path = settings_store.rs; sourceTree = "<group>"; };
+		FCE4455D7F3A146282FDE61E /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		434F6E2C410758187986155F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E7BBD860D7481EFCED2ECE5A /* libapp.a in Frameworks */,
+				2ECF3ED589DD605B9473BA81 /* CoreGraphics.framework in Frameworks */,
+				D48AD234BD3113FBA266E464 /* Metal.framework in Frameworks */,
+				74ED196703A7E6789B131780 /* MetalKit.framework in Frameworks */,
+				62683BF71C7200724004682B /* QuartzCore.framework in Frameworks */,
+				79B302FC21F9D32AE43DBA37 /* Security.framework in Frameworks */,
+				F5EAB9357FFB42147D570E3B /* UIKit.framework in Frameworks */,
+				7EA5AC93E962D9A40C86C6CE /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3B0F2C7BC0A3F6E74CF35B5D /* bloodborne-launcher_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				7916C5DB3705EBD543B57DC8 /* bloodborne-launcher_iOS.entitlements */,
+				265684301A95ACC945ACD692 /* Info.plist */,
+			);
+			path = "bloodborne-launcher_iOS";
+			sourceTree = "<group>";
+		};
+		5622F10A5A1076E6E37224D5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BAC31C9D5DE075F166DD4407 /* CoreGraphics.framework */,
+				1EF7AD6549176B5D3C817867 /* libapp.a */,
+				BDE8073FCBB47DBFD47014CE /* Metal.framework */,
+				FCE4455D7F3A146282FDE61E /* MetalKit.framework */,
+				202399FA33EDDB9EFCBD6EDF /* QuartzCore.framework */,
+				EB70DA3773492B9B9141EC10 /* Security.framework */,
+				5425488B3C1322B8CCB120D8 /* UIKit.framework */,
+				7384149D2B658379245F0F13 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5A6FEC422F23A21EF03533C2 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2C40BFB80973D2E5C2B55E29 /* character_growth.rs */,
+				BE121E4902F85DA16BD7732C /* database.rs */,
+				19072ACEF41FA8B69487984F /* game_lifecycle.rs */,
+				DB0C4D73397483B5BFD9F304 /* lib.rs */,
+				A06E68FD0E7DBECEFA2E4C68 /* main.rs */,
+				69598F97B1CC0FBD435EEC34 /* online_password.rs */,
+				ED6E7B9B337FA89B92F48A9D /* platform.rs */,
+				495E5E4CD34A4A14A4E45472 /* profiles.rs */,
+				581CCAAEC9800ED3A27086D3 /* save_editor.rs */,
+				836E8D2088689C70D87A2049 /* saves.rs */,
+				F3840E09EF2C0CD06026D242 /* settings_store.rs */,
+				651DFF0BDB5397C1C6605457 /* tray_mobile.rs */,
+				67028C8FBF9E78ABDF9AB663 /* tray.rs */,
+				8E4C19133F7923878B8FCDEB /* trophies.rs */,
+				67D169B324B4621F9FC1545F /* trophy_catalog.rs */,
+				DBCF112A05C6159C38C23994 /* updates.rs */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		7FBC70BA4B9C9FAEC318036F /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				B6B4B9B4CA84917EF7C5E087 /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		8E20782B137E02639743606C /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A9F65F891A32E0173865CB71 /* bloodborne-launcher */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		9220A623A2D6058CE592B0AD /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		A9F65F891A32E0173865CB71 /* bloodborne-launcher */ = {
+			isa = PBXGroup;
+			children = (
+				EC575143B360F1B4FF267AF9 /* main.mm */,
+				7FBC70BA4B9C9FAEC318036F /* bindings */,
+			);
+			path = "bloodborne-launcher";
+			sourceTree = "<group>";
+		};
+		B1E4A0A476E7208B10787D25 = {
+			isa = PBXGroup;
+			children = (
+				0B8744F2C3F20B99730634EF /* assets */,
+				43AB0868B71DACED666A0DBD /* Assets.xcassets */,
+				B1F98C00D1A15C941350BCE0 /* LaunchScreen.storyboard */,
+				3B0F2C7BC0A3F6E74CF35B5D /* bloodborne-launcher_iOS */,
+				9220A623A2D6058CE592B0AD /* Externals */,
+				8E20782B137E02639743606C /* Sources */,
+				5A6FEC422F23A21EF03533C2 /* src */,
+				5622F10A5A1076E6E37224D5 /* Frameworks */,
+				C9B2D7931C4CA73B156ACCBC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C9B2D7931C4CA73B156ACCBC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ED77F61887AAB7434F4CE755 /* bloodborne-launcher_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		"TEMP_752DB584-02DF-4412-8707-186E93D479A6" /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = arm64;
+			sourceTree = "<group>";
+		};
+		"TEMP_C8BBEFE1-C34F-4C22-9955-D70D49E1A1AC" /* x86_64 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = x86_64;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C3F7E9707E2A700BCD9E61DA /* bloodborne-launcher_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5B3CBA812CC492345628CE4 /* Build configuration list for PBXNativeTarget "bloodborne-launcher_iOS" */;
+			buildPhases = (
+				43EF4B615B004DC8B6659C00 /* Build Rust Code */,
+				5D43C2897977CFD0B59959A7 /* Sources */,
+				6AD8905012EFC9076FC9350B /* Resources */,
+				434F6E2C410758187986155F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "bloodborne-launcher_iOS";
+			packageProductDependencies = (
+			);
+			productName = "bloodborne-launcher_iOS";
+			productReference = ED77F61887AAB7434F4CE755 /* bloodborne-launcher_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		454D03EE206AA2C42290C54F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = DBDF40C08E3C5BE3947CA23C /* Build configuration list for PBXProject "bloodborne-launcher" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = B1E4A0A476E7208B10787D25;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C9B2D7931C4CA73B156ACCBC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C3F7E9707E2A700BCD9E61DA /* bloodborne-launcher_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6AD8905012EFC9076FC9350B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F88BC0C36338B1A99444AC64 /* Assets.xcassets in Resources */,
+				C94F6003AA76628249EBAFCD /* LaunchScreen.storyboard in Resources */,
+				A71791E7DCED4429985A21D3 /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		43EF4B615B004DC8B6659C00 /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# scripts/ios-rust.sh: the front end and the launcher library (not `tauri ios xcode-script`,\n# which needs Xcode's iOS simulator platform and the Tauri CLI running).\nbash \"${SRCROOT:?}/../../../scripts/ios-rust.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D43C2897977CFD0B59959A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E818CCAFC91EC359D66F1182 /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		000725096BADD05AC1370415 /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "bloodborne-launcher_iOS/bloodborne-launcher_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "bloodborne-launcher_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.pablovsouza.bloodborne-ios";
+				PRODUCT_NAME = Bloodborne;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = debug;
+		};
+		516F529EB0D401A80690ECB8 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+		93625760637AABB7A035D860 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "bloodborne-launcher_iOS/bloodborne-launcher_iOS.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "bloodborne-launcher_iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/$(PLATFORM_NAME) $(DEVELOPER_DIR)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "io.github.pablovsouza.bloodborne-ios";
+				PRODUCT_NAME = Bloodborne;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+			};
+			name = release;
+		};
+		F4A5B6364BBEE36921AB852A /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DBDF40C08E3C5BE3947CA23C /* Build configuration list for PBXProject "bloodborne-launcher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4A5B6364BBEE36921AB852A /* debug */,
+				516F529EB0D401A80690ECB8 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		E5B3CBA812CC492345628CE4 /* Build configuration list for PBXNativeTarget "bloodborne-launcher_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				000725096BADD05AC1370415 /* debug */,
+				93625760637AABB7A035D860 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 454D03EE206AA2C42290C54F /* Project object */;
+}

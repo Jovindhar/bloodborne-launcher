@@ -1,23 +1,29 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib";
 
-type Props = { label: string; icon: ReactNode; active: boolean; onClick: () => void; badge?: ReactNode };
+type Props = { label: string; icon: ReactNode; active: boolean; onClick: () => void; badge?: ReactNode;
+  /** The narrow-screen strip's form: a pill that does not shrink. */
+  pill?: boolean };
 
-export function SidebarNavItem({ label, icon, active, onClick, badge }: Props) {
+/** A tab in the menu: the sidebar's row, or a pill in the narrow-screen strip. */
+export function SidebarNavItem({ label, icon, active, onClick, badge, pill = false }: Props) {
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-current={active ? "page" : undefined}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition",
+        "flex items-center text-sm transition [&_svg]:size-4",
+        pill ? "shrink-0 gap-1.5 rounded-full px-3.5 py-2" : "gap-3 rounded-lg px-3 py-2",
         active
-          ? "bg-sidebar-accent text-sidebar-accent-foreground ring-1 ring-blood-600/40"
-          : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
+          ? "bg-sidebar-accent text-sidebar-accent-foreground [&_svg]:text-gold-400"
+          : cn("text-muted-foreground", pill ? "active:bg-white/5" : "hover:bg-white/5 hover:text-foreground"),
       )}
     >
-      <span className={cn("[&_svg]:size-4", active && "text-blood-400")}>{icon}</span>
+      {icon}
       {label}
-      {badge && <span className="ml-auto">{badge}</span>}
+      {badge && <span className={pill ? undefined : "ml-auto"}>{badge}</span>}
     </button>
   );
 }
+

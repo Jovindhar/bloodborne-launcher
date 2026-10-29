@@ -59,7 +59,7 @@ fn real_dir(path: &Path) -> Result<bool> {
     }
 }
 
-fn slot_path(user: &Path, title: &str, slot: u8) -> Result<PathBuf> {
+pub(crate) fn slot_path(user: &Path, title: &str, slot: u8) -> Result<PathBuf> {
     if !TITLES.contains(&title) || slot > 9 {
         return Err("Unsupported Bloodborne save slot.".into());
     }
@@ -75,7 +75,7 @@ fn slot_path(user: &Path, title: &str, slot: u8) -> Result<PathBuf> {
     Ok(set.join(format!("userdata{slot:04}")))
 }
 
-fn slot_bytes(path: &Path) -> Result<Vec<u8>> {
+pub(crate) fn slot_bytes(path: &Path) -> Result<Vec<u8>> {
     let meta = fs::symlink_metadata(path).map_err(|e| e.to_string())?;
     if !meta.is_file() || meta.file_type().is_symlink() || meta.len() != SLOT_BYTES as u64 {
         return Err("Unsupported Bloodborne character file.".into());
@@ -99,34 +99,101 @@ fn number(bytes: &[u8], base: usize, relative: isize) -> Result<u32> {
     Ok(u32::from_le_bytes(raw))
 }
 
-fn character_base(bytes: &[u8]) -> Result<Option<usize>> {
+pub(crate) fn character_base(bytes: &[u8]) -> Result<Option<usize>> {
     if bytes.len() != SLOT_BYTES {
         return Err("Unsupported Bloodborne character file.".into());
     }
-    // Empty slot files have no FACE block. A nonempty file must have one unambiguous anchor.
-    let faces: Vec<usize> = bytes[0xf000..]
-        .windows(4)
-        .enumerate()
-        .filter_map(|(index, window)| (window == b"FACE").then_some(index + 0xf000))
-        .take(2)
-        .collect();
-    let face = match faces.as_slice() {
-        [] => return Ok(None),
-        [face] => *face,
+    // Empty slot files have no FACE block. Nonempty ones have the character's, with the
+    // inventory marker at its fixed distance before it, once or twice (copies()).
+    let faces = faces(bytes);
+    if faces.is_empty() {
+        return Ok(None);
+    }
+    let inventory = match copies(bytes, &faces)?.as_slice() {
+        [] => return Err("Unrecognized character inventory layout.".into()),
+        [one] => *one,
+        [first, second] => {
+            // Two copies: the current state and the previous one the game keeps. The current one
+            // has the longer playtime (the u32 at offset 8 of each copy).
+            let delta = second - first;
+            if playtime_at(bytes, delta)? > playtime_at(bytes, 0)? { *second } else { *first }
+        }
         _ => return Err("Ambiguous character appearance block.".into()),
     };
-    // The inventory marker and UTF-16 name independently confirm the FACE location.
-    let inventory = face.checked_sub(34028).ok_or("Invalid character layout.")?;
     let base = inventory
         .checked_sub(469)
         .ok_or("Invalid character layout.")?;
-    if bytes.get(inventory..inventory + 4) != Some(INVENTORY_MAGIC.as_slice()) {
-        return Err("Unrecognized character inventory layout.".into());
-    }
     Ok(Some(base))
 }
 
-fn parse(bytes: &[u8], title: &str, slot: u8) -> Result<Option<Character>> {
+/// The inventory starts of the character copies: the FACE blocks with the inventory marker at
+/// their fixed distance before them, at most two, the second a whole copy of the first part of the
+/// file (the game writes it after play).
+fn copies(bytes: &[u8], faces: &[usize]) -> Result<Vec<usize>> {
+    let anchored: Vec<usize> = faces
+        .iter()
+        .filter_map(|&face| face.checked_sub(34028))
+        .filter(|&inventory| bytes.get(inventory..inventory + 4) == Some(INVENTORY_MAGIC.as_slice()))
+        .collect();
+    if let [first, second] = anchored.as_slice() {
+        if second - first < *first + 34028 {
+            return Err("Ambiguous character appearance block.".into());
+        }
+    }
+    Ok(anchored)
+}
+
+/// How many copies of the character the file holds (the game sometimes keeps the previous one).
+pub(crate) fn copy_count(bytes: &[u8]) -> Result<usize> {
+    Ok(copies(bytes, &faces(bytes))?.len())
+}
+
+fn playtime_at(bytes: &[u8], copy: usize) -> Result<u32> {
+    Ok(u32::from_le_bytes(
+        bytes.get(copy + 8..copy + 12).ok_or("Truncated playtime.")?.try_into().unwrap(),
+    ))
+}
+
+fn faces(bytes: &[u8]) -> Vec<usize> {
+    bytes[0xf000..]
+        .windows(4)
+        .enumerate()
+        .filter_map(|(index, window)| (window == b"FACE").then_some(index + 0xf000))
+        .collect()
+}
+
+/// After an edit of the current copy: the same bytes in the other copy, when it held the same
+/// values at every edited byte (then both copies agree, whichever the game reads). Otherwise the
+/// other copy is the game's own previous state and stays as it is.
+pub(crate) fn mirror(original: &[u8], edited: &mut [u8]) -> Result<()> {
+    let found = copies(original, &faces(original))?;
+    let [first, second] = found.as_slice() else {
+        return Ok(());
+    };
+    let delta = second - first;
+    let current = character_base(original)?.ok_or("The character slot is empty.")? + 469;
+    let changed: Vec<usize> = (0..original.len()).filter(|&i| original[i] != edited[i]).collect();
+    let target = |i: usize| if current == *first { i.checked_add(delta) } else { i.checked_sub(delta) };
+    let mut writes = Vec::new();
+    for &i in &changed {
+        let Some(j) = target(i).filter(|&j| j < original.len()) else {
+            return Err("An edit fell outside the character's copy.".into());
+        };
+        if changed.contains(&j) {
+            return Err("An edit touched both character copies.".into());
+        }
+        if original[j] != original[i] {
+            return Ok(());
+        }
+        writes.push((j, edited[i]));
+    }
+    for (j, value) in writes {
+        edited[j] = value;
+    }
+    Ok(())
+}
+
+pub(crate) fn parse(bytes: &[u8], title: &str, slot: u8) -> Result<Option<Character>> {
     let Some(base) = character_base(bytes)? else {
         return Ok(None);
     };
@@ -166,8 +233,12 @@ fn parse(bytes: &[u8], title: &str, slot: u8) -> Result<Option<Character>> {
     let new_game_cycle = *bytes
         .get(base + 68831)
         .ok_or("Truncated character progression.")?;
-    let playtime_ms =
-        u32::from_le_bytes(bytes[8..12].try_into().map_err(|_| "Truncated playtime.")?);
+    let copy = copies(bytes, &faces(bytes))?;
+    let delta = match copy.as_slice() {
+        [first, second] if base + 469 == *second => second - first,
+        _ => 0,
+    };
+    let playtime_ms = playtime_at(bytes, delta)?;
     Ok(Some(Character {
         title_id: title.into(),
         slot,
@@ -188,6 +259,12 @@ fn parse(bytes: &[u8], title: &str, slot: u8) -> Result<Option<Character>> {
     }))
 }
 
+/// The fingerprint of a character file in a staged save set (what an edit was opened on).
+pub fn fingerprint(savedata: &Path, title: &str, slot: u8) -> Result<String> {
+    let user = savedata.parent().ok_or("Invalid save staging folder.")?;
+    Ok(format!("{:x}", Sha256::digest(slot_bytes(&slot_path(user, title, slot)?)?)))
+}
+
 pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
     if edit.echoes > 999_999_999 || edit.insight > 99 {
         return Err("Blood Echoes or Insight is outside the game range.".into());
@@ -195,6 +272,7 @@ pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
     let user = savedata.parent().ok_or("Invalid save staging folder.")?;
     let path = slot_path(user, &edit.title_id, edit.slot)?;
     let mut bytes = slot_bytes(&path)?;
+    let original = bytes.clone();
     let before = parse(&bytes, &edit.title_id, edit.slot)?.ok_or("The character slot is empty.")?;
     if !before.stats_consistent || before.fingerprint != edit.fingerprint {
         return Err("The character changed since it was opened, or its stats are inconsistent. Refresh the save preview.".into());
@@ -310,6 +388,7 @@ pub fn rewrite(savedata: &Path, edit: &Edit) -> Result<()> {
             }
         }
     }
+    mirror(&original, &mut bytes)?;
     fs::write(path, bytes).map_err(|e| e.to_string())
 }
 
@@ -383,9 +462,44 @@ mod tests {
         assert_eq!(character.name, "Hunter");
         assert_eq!(character.level, 17);
         assert!(character.stats_consistent);
-        bytes[face + 20..face + 24].copy_from_slice(b"FACE");
+        // Another appearance record later in the file (the game writes one) is not the anchor.
+        bytes[face + 0x1000..face + 0x1004].copy_from_slice(b"FACE");
+        assert_eq!(parse(&bytes, "CUSA03173", 0).unwrap().unwrap().name, "Hunter");
+        // Two blocks that both have the inventory marker before them are ambiguous.
+        let other = face + 0x2000;
+        bytes[other..other + 4].copy_from_slice(b"FACE");
+        bytes[other - 34028..other - 34024].copy_from_slice(&INVENTORY_MAGIC);
         assert!(parse(&bytes, "CUSA03173", 0).is_err());
         assert!(parse(&bytes[..100], "CUSA03173", 0).is_err());
+    }
+
+    #[test]
+    fn edits_reach_both_copies_when_they_agree() {
+        const DELTA: usize = 0xd2090;
+        let mut two = sample();
+        let (first, rest) = two.split_at_mut(DELTA);
+        rest[..0x20000].copy_from_slice(&first[..0x20000]);
+        two[8..12].copy_from_slice(&2000u32.to_le_bytes()); // the first copy is the current one
+        two[DELTA + 8..DELTA + 12].copy_from_slice(&1000u32.to_le_bytes());
+        let character = parse(&two, "CUSA03173", 0).unwrap().unwrap();
+        assert_eq!(character.playtime_ms, 2000);
+        let base = 0xc000;
+        let mut edited = two.clone();
+        edited[base - 19..base - 15].copy_from_slice(&500u32.to_le_bytes());
+        mirror(&two, &mut edited).unwrap();
+        assert_eq!(number(&edited, base + DELTA, -19).unwrap(), 500);
+        // A previous copy that differs where the edit is stays as the game left it.
+        let mut diverged = two.clone();
+        diverged[base + DELTA - 19] = 7;
+        let mut edited = diverged.clone();
+        edited[base - 19..base - 15].copy_from_slice(&500u32.to_le_bytes());
+        mirror(&diverged, &mut edited).unwrap();
+        assert_eq!(edited[base + DELTA - 19], 7);
+        // When the second copy is the current one, it is the one read.
+        two[DELTA + 8..DELTA + 12].copy_from_slice(&3000u32.to_le_bytes());
+        two[base + DELTA - 19..base + DELTA - 15].copy_from_slice(&42u32.to_le_bytes());
+        let character = parse(&two, "CUSA03173", 0).unwrap().unwrap();
+        assert_eq!((character.playtime_ms, character.echoes), (3000, 42));
     }
 
     #[test]

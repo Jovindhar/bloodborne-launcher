@@ -29,7 +29,7 @@ export function GamepadPicker() {
       description={connected.length === 0 && !gamepads.isPending ? t("controls.noControllers") : t("controls.controllerHint")}
     >
       <Select value={settings.gamepad ?? ""} items={items} onValueChange={(v) => v !== null && choose(v)}>
-        <SelectTrigger className="min-w-64 bg-secondary">
+        <SelectTrigger className="min-w-0 flex-1 bg-secondary sm:min-w-64 sm:flex-none">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

@@ -44,7 +44,7 @@ export function LogPage() {
         }
       />
       {log.length === 0 ? (
-        <div className="rounded-2xl border border-border bg-card/40">
+        <div className="rounded-2xl surface">
           <EmptyState icon={<ScrollText className="size-10" />} title={t("log.empty")}>
             {t("log.emptyHint")}
           </EmptyState>

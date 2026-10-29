@@ -13,7 +13,7 @@ export function UpdateNotice() {
   if (!release?.newer || dismissed === release.tag) return null;
   return (
     <>
-      <Alert className="mb-5 border-primary/30">
+      <Alert className="mb-5 bg-primary/15">
         <AlertTitle>{t("updates.available", { version: release.version })}</AlertTitle>
         <AlertDescription className="flex flex-wrap items-center justify-between gap-3">
           <span>{t("updates.downloadHint")}</span>

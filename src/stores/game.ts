@@ -17,7 +17,8 @@ type GameStore = {
   lastExit: number | null | undefined;
   log: string[];
   startedAt: number | null;
-  play: () => Promise<void>;
+  /** `password`: the online password asked at launch when it is not saved. */
+  play: (password?: string) => Promise<void>;
   stop: () => Promise<void>;
   clearLog: () => void;
   /** Subscribes to the backend's events; returns the unsubscribe function. */
@@ -29,10 +30,10 @@ export const useGameStore = create<GameStore>((set) => ({
   lastExit: undefined,
   log: [],
   startedAt: null,
-  play: async () => {
+  play: async (password) => {
     set({ log: [], lastExit: undefined });
     try {
-      await api.launch();
+      await api.launch(password);
       set({ running: true, startedAt: Date.now() });
     } catch (error) {
       toast.error(i18n.t("play.failedToStart"), { description: String(error) });

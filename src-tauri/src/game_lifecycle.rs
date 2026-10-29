@@ -20,7 +20,8 @@ fn classify(result: io::Result<Option<ExitStatus>>) -> Poll {
 pub fn poll(child: Option<&mut Child>) -> Poll {
     child.map_or(Poll::Finished(None), |child| classify(child.try_wait()))
 }
-#[cfg(test)]
+// The tests start sh and sleep.
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use std::process::Command;

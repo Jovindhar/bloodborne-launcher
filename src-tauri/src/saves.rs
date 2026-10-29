@@ -30,6 +30,8 @@ pub struct Backup {
     pub id: String,
     pub created: u64,
     pub bytes: u64,
+    /// Whether the save set in it was edited (its .bb-edited marker).
+    pub edited: bool,
 }
 
 fn now() -> u64 {
@@ -264,6 +266,7 @@ pub fn list_excluding(data: &Path, original: &Path, excluded: &[String]) -> Resu
                         id: bid,
                         created: metadata(&entry.path())?.created,
                         bytes: stats(&entry.path().join("savedata"))?.0,
+                        edited: fs::symlink_metadata(entry.path().join("savedata/.bb-edited")).is_ok_and(|meta| meta.is_file()),
                     });
                 }
             }

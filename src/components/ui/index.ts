@@ -14,3 +14,4 @@ export * from "@/components/ui/tooltip";
 export * from "@/components/ui/tabs";
 export * from "@/components/ui/dialog";
 export * from "@/components/ui/alert-dialog";
+export * from "@/components/ui/menu";

@@ -24,5 +24,4 @@ image tinted by macOS). Window restoration follows [Leari](https://github.com/le
 `cargo test` covers process polling (normal, nonzero and killed exits, a missing handle, a wait
 error). `cargo run --manifest-path src-tauri/Cargo.toml --example tray_lifecycle` is a native
 smoke test with its own app id and short synthetic processes (it opens a small window and a tray
-icon: say so before running it). Packaged QA: `BB_LAUNCHER_DATA_DIR=/absolute/synthetic/dir`
-makes a packaged launcher use that data folder; empty or relative values are refused.
+icon: say so before running it).

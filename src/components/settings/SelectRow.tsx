@@ -27,7 +27,7 @@ export function SelectRow<T extends string | number>({ title, description, value
         items={options.map((o) => ({ value: o.value, label: label(o) }))}
         onValueChange={(next) => next !== null && onChange(next as T)}
       >
-        <SelectTrigger className="min-w-52 bg-secondary">
+        <SelectTrigger className="w-full bg-secondary sm:w-auto sm:min-w-52">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

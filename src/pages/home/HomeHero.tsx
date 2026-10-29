@@ -1,21 +1,30 @@
 import { useTranslation } from "react-i18next";
-import { Moon } from "@/components/brand";
 import { PlayButton } from "@/components/sidebar";
+import { SummaryGrid } from "@/pages/home/SummaryGrid";
+import hero from "@/assets/home-hero.webp";
 
-/** The night sky banner with the moon and a large Play button. */
+/** The top of Home: a night city (an AI-generated image, docs/CREDITS.md) as the page's background,
+ * edge to edge behind the content and fading into the page, with the title and Play over it. */
 export function HomeHero() {
   const { t } = useTranslation();
   return (
-    <div className="relative mb-6 overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-blood-700/40 via-night-800 to-night-950 px-10 py-12 shadow-2xl shadow-black/50">
-      <div className="pointer-events-none absolute -right-10 -top-10 opacity-90">
-        <Moon className="size-72" />
+    <>
+      {/* Absolute to the scrolling main (AppWindow), behind the content (main isolates it). */}
+      {/* Its lower part fades out (a mask) into the window's own background. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[30rem] overflow-hidden [mask-image:linear-gradient(to_bottom,#000_55%,transparent)] md:h-[36rem]" aria-hidden="true">
+        <img src={hero} alt="" draggable={false} className="size-full object-cover object-[72%_center]" />
+        {/* The text side, and narrow screens where the text covers the city: shade it. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-background/0 md:from-background/85 md:via-background/30" />
       </div>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(161,29,34,0.35),transparent_60%)]" />
-      <div className="relative max-w-md">
-        <h1 className="font-display text-5xl font-semibold tracking-wide text-parchment drop-shadow-lg">{t("home.title")}</h1>
-        <p className="mt-3 text-sm text-parchment/70">{t("home.subtitle")}</p>
-        <PlayButton className="mt-8 max-w-56 py-3.5 text-base" />
+      <div className="flex min-h-64 flex-col justify-center pb-10 pt-6 md:min-h-80 md:pt-12">
+        <p className="max-w-lg flex items-center gap-3 font-display text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-400">
+          <span className="h-px w-6 bg-gold-400/70" aria-hidden="true" />{t("home.eyebrow")}
+        </p>
+        <h1 className="max-w-lg mt-3 font-display text-3xl font-semibold tracking-wide text-gold-300 drop-shadow-lg sm:text-5xl">{t("home.title")}</h1>
+        <p className="max-w-lg mt-3 text-sm text-parchment/80 drop-shadow">{t("home.subtitle")}</p>
+        <PlayButton className="mt-8 hidden max-w-56 py-3.5 text-base md:flex" />
+        <div className="mt-6 md:mt-4"><SummaryGrid /></div>
       </div>
-    </div>
+    </>
   );
 }

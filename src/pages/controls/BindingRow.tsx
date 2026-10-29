@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Crosshair, LoaderCircle, Mouse, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
-import { Badge, Button, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui";
+import { IconAction } from "@/components/common";
+import { Badge, Button } from "@/components/ui";
 import { useIni, useSettingsData } from "@/hooks";
 import { api } from "@/lib";
 import { padLabel } from "@/lib/data";
@@ -92,14 +93,14 @@ export function BindingRow({ control, kind }: Props) {
     );
   }
   return (
-    <div className="flex items-center justify-between gap-4 px-5 py-2.5">
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2.5 sm:px-5">
       <div className="flex items-center gap-3 text-sm">
         {control.glyph && (
           <span className="flex size-7 items-center justify-center rounded-full bg-secondary text-sm text-blood-400">{control.glyph}</span>
         )}
         <span>{t(`controls.inputs.${control.id}` as "controls.inputs.cross")}</span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {capturing || mouse ? (
           <span className="flex items-center gap-2 text-xs text-blood-400">
             <LoaderCircle className="size-3.5 animate-spin" /> {t(mouse ? "controls.pressMouse" : "controls.press")}
@@ -117,12 +118,7 @@ export function BindingRow({ control, kind }: Props) {
             <Mouse /> {t("controls.mouse")}
           </Button>
         )}
-        <Tooltip>
-          <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => setIni(iniKey, null)} disabled={!custom} />}>
-            <RotateCcw />
-          </TooltipTrigger>
-          <TooltipContent>{t("common.reset")}</TooltipContent>
-        </Tooltip>
+        <IconAction label={t("common.reset")} onClick={() => setIni(iniKey, null)} disabled={!custom}><RotateCcw /></IconAction>
       </div>
     </div>
   );

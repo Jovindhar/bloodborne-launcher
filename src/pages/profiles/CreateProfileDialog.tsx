@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Input, Label, Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose, DialogHeader, DialogFooter } from "@/components/ui";
+import { Message } from "@/components/common";
 
 export function CreateProfileDialog({ disabled, busy, onCreate }: {
   disabled: boolean;
@@ -38,7 +39,7 @@ export function CreateProfileDialog({ disabled, busy, onCreate }: {
         }}>
           <Label htmlFor="profile-name">{t("saves.name")}</Label>
           <Input ref={input} id="profile-name" className="mb-4 mt-2" maxLength={80} required value={name} disabled={disabled} onChange={(event) => setName(event.target.value)} />
-          {error && <p role="alert" className="mb-4 break-words text-sm text-destructive">{error}</p>}
+          {error && <Message tone="error" className="mb-4">{error}</Message>}
           <DialogFooter>
             <DialogClose render={<Button variant="outline" disabled={busy} />}>{t("saves.cancel")}</DialogClose>
             <Button type="submit" disabled={disabled || !name.trim()}>{t("saves.create")}</Button>

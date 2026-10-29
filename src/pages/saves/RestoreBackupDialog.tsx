@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui";
+import { Message } from "@/components/common";
 
 export function RestoreBackupDialog({ label, disabled, onRestore }: {
   label: string; disabled: boolean; onRestore: () => Promise<void>;
@@ -21,7 +22,7 @@ export function RestoreBackupDialog({ label, disabled, onRestore }: {
         <DialogDescription>{t("saves.restoreHint")}</DialogDescription>
       </DialogHeader>
       <p className="text-sm text-muted-foreground">{label}</p>
-      {error && <p role="alert" className="break-words text-sm text-destructive">{error}</p>}
+      {error && <Message tone="error">{error}</Message>}
       <DialogFooter>
         <Button variant="outline" disabled={pending} onClick={() => setOpen(false)}>{t("saves.cancel")}</Button>
         <Button variant="destructive" disabled={disabled || pending} onClick={async () => {

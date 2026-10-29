@@ -21,5 +21,5 @@ export const queryKeys = {
   gamepads: ["gamepads"] as const,
   displays: ["displays"] as const,
   fsr411: ["fsr411"] as const,
-  onlinePassword: (npid: string) => ["online-password", npid] as const,
+  recomp: ["recomp"] as const,
 };

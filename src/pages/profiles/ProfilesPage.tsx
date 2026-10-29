@@ -1,27 +1,23 @@
 import { useTranslation } from "react-i18next";
 import { PageHeader, SettingsSection } from "@/components/settings";
-import { ProfileDetailsPage } from "@/pages/profiles/ProfileDetailsPage";
-import { useUiStore } from "@/stores";
 import { useProfiles } from "@/hooks";
 import { ProfileCard } from "@/pages/profiles/ProfileCard";
 import { CreateProfileDialog } from "@/pages/profiles/CreateProfileDialog";
+import { Message } from "@/components/common";
 
 export function ProfilesPage() {
   const { t } = useTranslation();
   const { data, change, busy, running, error } = useProfiles();
-  const viewedProfile = useUiStore((state) => state.viewedProfile);
-  const openProfile = useUiStore((state) => state.openProfile);
   const disabled = busy || running;
-  if (viewedProfile) return <ProfileDetailsPage key={viewedProfile} profileId={viewedProfile} />;
   return (<>
     <PageHeader title={t("profiles.title")} subtitle={t("profiles.subtitle")} actions={
       <CreateProfileDialog disabled={disabled || !data} busy={busy}
         onCreate={(name) => change({ action: "create", id: "", name })} />
     } />
-    {running && <p className="mb-4 text-sm text-blood-400">{t("saves.stopFirst")}</p>}
-    {error && <p role="alert">{String(error)}</p>}
+    {running && <Message tone="warning" className="mb-4">{t("saves.stopFirst")}</Message>}
+    {error && <Message tone="error" className="mb-4">{String(error)}</Message>}
     <SettingsSection>
-      {data?.profiles.map((profile) => <ProfileCard key={profile.id} profile={profile} onOpen={() => openProfile(profile.id)} active={profile.id === data.active} disabled={disabled} busy={busy} onChange={change} />)}
+      {data?.profiles.map((profile) => <ProfileCard key={profile.id} profile={profile} active={profile.id === data.active} disabled={disabled} busy={busy} onChange={change} />)}
     </SettingsSection>
   </>);
 }

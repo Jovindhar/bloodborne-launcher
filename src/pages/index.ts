@@ -9,3 +9,4 @@ export * from "@/pages/online";
 export * from "@/pages/patches";
 export * from "@/pages/saves";
 export * from "@/pages/profiles";
+export * from "@/pages/recomp";

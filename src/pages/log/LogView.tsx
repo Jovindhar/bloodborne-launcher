@@ -9,7 +9,7 @@ export function LogView({ lines, follow }: Props) {
     if (follow) end.current?.scrollIntoView({ block: "end" });
   }, [lines, follow]);
   return (
-    <div className="h-[calc(100vh-15rem)] min-h-64 overflow-auto rounded-2xl border border-border bg-night-950/80 p-4 font-mono text-[11px] leading-relaxed text-parchment/85 select-text">
+    <div className="h-[calc(100dvh-22rem)] min-h-64 md:h-[calc(100vh-15rem)] overflow-auto rounded-2xl surface-inset p-4 font-mono text-[11px] leading-relaxed text-parchment/85 select-text">
       {lines.map((line, i) => (
         <div key={i} className={/error|assert|stop:/i.test(line) ? "whitespace-pre-wrap text-blood-400" : "whitespace-pre-wrap"}>
           {line}
