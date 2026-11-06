@@ -43,6 +43,11 @@ const tauriApi = {
   openPath: (path: string) => invoke<void>("open_path", { path }),
   launch: (password?: string) => invoke<void>("launch", { password }),
   saveOnlinePassword: (password: string) => invoke<void>("save_online_password", { password }),
+  /** Yharnam Together's Global server: the account's name. */
+  ytSignIn: (name: string, password: string) => invoke<string>("yt_sign_in", { name, password }),
+  /** A new Global account, signed in: its recovery code (shown once). */
+  ytSignUp: (name: string, password: string) => invoke<string>("yt_sign_up", { name, password }),
+  ytSignOut: () => invoke<void>("yt_sign_out"),
   stop: () => invoke<void>("stop"),
   recompStatus: () => invoke<RecompStatus>("recomp_status"),
   /** Resolves when the build ends; its progress comes as onRecompProgress events. */

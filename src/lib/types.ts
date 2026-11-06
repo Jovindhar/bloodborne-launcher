@@ -51,6 +51,8 @@ export type Settings = {
   thd_token: string;
   /** BloodOnline: the Yharnam Together host's address (online_pool "yharnamtogether"). */
   yt_host: string;
+  /** Yharnam Together: its public Global server (an account) or a host's own server (yt_host). */
+  yt_server_type: "global" | "local";
   check_updates: boolean;
   crash_diag: boolean;
   gpu_profile: boolean;
@@ -88,6 +90,8 @@ export type Config = {
   running: boolean;
   /** A password is saved (online_save_password on and the file present). */
   online_password_saved?: boolean;
+  /** Yharnam Together's Global account name while its sign-in holds, else "". */
+  yt_global_name?: string;
 };
 
 export type Mod = { name: string; enabled: boolean };

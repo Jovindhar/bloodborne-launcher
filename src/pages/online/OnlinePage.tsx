@@ -6,6 +6,7 @@ import { PageHeader, SelectRow, SettingsSection, SwitchRow, TextRow } from "@/co
 import { useConfig, useProfiles, useSetting, useSettingsData } from "@/hooks";
 import { api, queryKeys } from "@/lib";
 import { SavePasswordDialog } from "@/pages/online/SavePasswordDialog";
+import { YtGlobalAccount } from "@/pages/online/YtGlobalAccount";
 import { Message } from "@/components/common";
 
 /** Accounts belong to the selected save profile; the backend blocks edited saves at launch. */
@@ -43,10 +44,18 @@ export function OnlinePage() {
         onChange={(value) => set("online_pool", value)} />
     </SettingsSection>
     {/* BloodOnline: Yharnam Together (the runtime's gpu/ytcoop module): its own seamless co-op. */}
-    {yt ? <SettingsSection title={t("online.yharnamTogether")} description={t("online.ytHint")}>
-      <TextRow title={t("online.ytHost")} description={t("online.ytHostHint")} value={settings.yt_host}
-        placeholder="192.168.1.20" onChange={(value) => set("yt_host", value.trim())} />
-    </SettingsSection> : <>
+    {yt ? <>
+      <SettingsSection title={t("online.yharnamTogether")} description={t("online.ytHint")}>
+        <SelectRow title={t("online.ytServer")} value={settings.yt_server_type}
+          options={[{ value: "global", label: "online.ytGlobal", hint: "online.ytGlobalHint" },
+                    { value: "local", label: "online.ytLocal", hint: "online.ytLocalHint" }]}
+          onChange={(value) => set("yt_server_type", value)} />
+        {settings.yt_server_type === "local" &&
+          <TextRow title={t("online.ytHost")} description={t("online.ytHostHint")} value={settings.yt_host}
+            placeholder="192.168.1.20" onChange={(value) => set("yt_host", value.trim())} />}
+      </SettingsSection>
+      {settings.yt_server_type !== "local" && <YtGlobalAccount name={config?.yt_global_name ?? ""} />}
+    </> : <>
     {/* BloodOnline: BBSC seamless co-op (CLS_AMG, from bbport 0.6), with Seamless Hunt only. */}
     <SettingsSection title={t("online.seamlessCoop")} description={t("online.bbscHint")}>
       <SwitchRow title={t("online.bbsc")} description={thd ? t("online.bbscSeamlessOnly") : undefined}

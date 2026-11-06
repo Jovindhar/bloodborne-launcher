@@ -43,6 +43,7 @@ const config: Config = {
     thd_online_id: "",
     thd_token: "",
     yt_host: "",
+    yt_server_type: "global",
     check_updates: true,
     crash_diag: false,
     gpu_profile: false,
@@ -64,6 +65,7 @@ const config: Config = {
   memory_mb: 18432,
   running: false,
   online_password_saved: false,
+  yt_global_name: "",
 };
 
 let mods: Mod[] = [
@@ -330,6 +332,9 @@ export const mockApi = {
   openPath: () => wait(undefined),
   launch: (_password?: string) => wait(undefined),
   saveOnlinePassword: (password: string) => wait(void (config.online_password_saved = password !== "")),
+  ytSignIn: (name: string, _password: string) => wait((config.yt_global_name = name)),
+  ytSignUp: (name: string, _password: string) => wait(((config.yt_global_name = name), "ABCD-EFGH-JKLM-NPQR")),
+  ytSignOut: () => wait(void (config.yt_global_name = "")),
   stop: () => wait(undefined),
   recompStatus: () => wait(structuredClone(previewRecomp)),
   recompBuild: () => previewRecompBuild(),

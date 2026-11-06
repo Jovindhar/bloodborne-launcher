@@ -145,6 +145,8 @@ fn default_settings() -> Map<String, Value> {
         "thd_online_id": "",
         "thd_token": "",
         "yt_host": "",
+        // "global": Yharnam Together's public server (an account); "local": a host's address.
+        "yt_server_type": "global",
         "check_updates": true,
         "crash_diag": false,
         "gpu_profile": false,
@@ -358,6 +360,8 @@ async fn load_config(state: State<'_ , AppState>) -> Result<Value, String> {
         "memory_mb": system_memory_mb(),
         "running": state.game.lock().map(|g| g.child.is_some()).unwrap_or(false),
         "online_password_saved": bool_setting(&s, "online_save_password") && online_password::saved(&p.data).is_some(),
+        // Yharnam Together's Global account: its name while the sign-in holds, else "".
+        "yt_global_name": yharnam_together::signed_in(&p.data).map(|a| a.name).unwrap_or_default(),
     }))
     }).await
 }
@@ -403,8 +407,11 @@ fn save_settings(app: AppHandle, state: State<AppState>, settings: Map<String, V
     if settings.get("online_pool").is_some_and(|v| !matches!(v.as_str(), Some("seamless" | "huntersdream" | "yharnamtogether"))) {
         return Err("online_pool must be seamless, huntersdream or yharnamtogether.".into());
     }
-    if settings.get("yt_host").is_some_and(|v| v.as_str().map_or(true, |h| !yharnam_together::valid_host(h))) {
+    if settings.get("yt_host").is_some_and(|v| v.as_str().is_none_or(|h| !yharnam_together::valid_host(h))) {
         return Err("The Yharnam Together host must be an IP address or a host name, without a port.".into());
+    }
+    if settings.get("yt_server_type").is_some_and(|v| !matches!(v.as_str(), Some("global" | "local"))) {
+        return Err("yt_server_type must be global or local.".into());
     }
     if settings.contains_key("yt_account") || settings.contains_key("yt_secret") {
         return Err("The Yharnam Together player id is made by the launcher.".into());
@@ -962,7 +969,9 @@ fn guest_profile_name(name: &str) -> String {
 }
 
 /// `password`: the online password typed at launch when it is not saved.
-fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -> Result<Vec<(String, String)>, String> {
+/// `yt_global`: where the game links on Yharnam Together's Global server (resolved by `launch`).
+fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>,
+                    yt_global: Option<&yharnam_together::GlobalTarget>) -> Result<Vec<(String, String)>, String> {
     let mut env: Vec<(String, String)> = Vec::new();
     let mut set = |k: &str, v: String| env.push((k.to_string(), v));
     set("PATH", platform::game_path(&p.bash).to_string_lossy().into());
@@ -1055,9 +1064,18 @@ fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -
         }
         set("BB_NET_MODULE", module.to_string_lossy().into());
         set("BB_NET_GEN", "20".into());
-        if pool == "yharnamtogether" {
-            // BloodOnline: Yharnam Together (gpu/ytcoop). Everyone types the host's address; the
-            // player id is the launcher's own (made once at launch, yharnam_together::player_id).
+        if pool == "yharnamtogether" && str_setting(s, "yt_server_type") != "local" {
+            // BloodOnline: Yharnam Together's Global server: the signed-in account, on the shard
+            // `launch` resolved.
+            let account = yharnam_together::signed_in(&p.data)
+                .ok_or("Sign in to Yharnam Together's Global server on the Online page first.")?;
+            let target = yt_global.ok_or("The Global server's address is not known yet: try again.")?;
+            for (key, value) in yharnam_together::global_environment(target, &account) {
+                set(key, value);
+            }
+        } else if pool == "yharnamtogether" {
+            // BloodOnline: Yharnam Together (gpu/ytcoop) on a host's own server. Everyone types the host's
+            // address; the player id is the launcher's own (made once at launch, yharnam_together::player_id).
             let host = str_setting(s, "yt_host");
             if host.is_empty() {
                 return Err("Enter the Yharnam Together host's address on the Online page.".into());
@@ -1109,10 +1127,43 @@ fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -
 #[tauri::command]
 async fn launch(app: AppHandle, state: State<'_, AppState>, password: Option<String>) -> Result<(), String> {
     let state=state.inner().clone();
-    blocking(move || start_game(&app, &state, password.as_deref())).await
+    // Yharnam Together's Global server: the shard is looked up before the game starts (HTTPS).
+    let s = load_settings(&state.paths);
+    let yt_global = if bool_setting(&s, "online") && str_setting(&s, "online_pool") == "yharnamtogether"
+        && str_setting(&s, "yt_server_type") != "local" {
+        let account = yharnam_together::signed_in(&state.paths.data)
+            .ok_or("Sign in to Yharnam Together's Global server on the Online page first.")?;
+        Some(yharnam_together::resolve(&account).await?)
+    } else {
+        None
+    };
+    blocking(move || start_game(&app, &state, password.as_deref(), yt_global.as_ref())).await
 }
 
-fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Result<(), String> {
+/// Yharnam Together's Global server: signs in (the password goes to that server alone, over HTTPS,
+/// and is not kept); the account's name.
+#[tauri::command]
+async fn yt_sign_in(state: State<'_, AppState>, name: String, password: String) -> Result<String, String> {
+    let data = state.paths.data.clone();
+    yharnam_together::sign_in(&data, name.trim(), &password).await.map(|a| a.name)
+}
+
+/// A new Global account, signed in; its recovery code, shown to the player once and never kept.
+#[tauri::command]
+async fn yt_sign_up(state: State<'_, AppState>, name: String, password: String) -> Result<String, String> {
+    let data = state.paths.data.clone();
+    yharnam_together::sign_up(&data, name.trim(), &password).await.map(|(_, code)| code)
+}
+
+#[tauri::command]
+async fn yt_sign_out(state: State<'_, AppState>) -> Result<(), String> {
+    let data = state.paths.data.clone();
+    yharnam_together::sign_out(&data).await;
+    Ok(())
+}
+
+fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>,
+              yt_global: Option<&yharnam_together::GlobalTarget>) -> Result<(), String> {
     let app = app.clone();
     let p = state.paths.clone();
     let mut game = state.game.lock().map_err(|e| e.to_string())?;
@@ -1122,7 +1173,8 @@ fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Resu
     saves_idle(&game)?;
     let mut s = load_settings(&p);
     // Yharnam Together: this player's id on its servers, made once and kept.
-    if str_setting(&s, "online_pool") == "yharnamtogether" && yharnam_together::with_player_id(&mut s) {
+    if str_setting(&s, "online_pool") == "yharnamtogether" && str_setting(&s, "yt_server_type") == "local"
+        && yharnam_together::with_player_id(&mut s) {
         write_settings(&p, s.clone())?;
     }
     selected_user_dir(&p)?;
@@ -1144,7 +1196,7 @@ fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Resu
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
-    for (k, v) in game_environment(&p, &s, password)? {
+    for (k, v) in game_environment(&p, &s, password, yt_global)? {
         cmd.env(k, v);
     }
     // The in-game menu and the launcher keep each other's settings (BBSET lines both ways).
@@ -1277,7 +1329,7 @@ pub fn run() {
             if std::env::args().any(|a| a == "--play") {
                 let handle = app.handle().clone();
                 let state = app.state::<AppState>();
-                if let Err(e) = start_game(&handle, &state, None) {
+                if let Err(e) = start_game(&handle, &state, None, None) {
                     eprintln!("--play: {e}");
                 }
             }
@@ -1288,7 +1340,7 @@ pub fn run() {
             updates::open_release,
             load_config, save_settings, save_ini, check_game, game_icon, list_mods, save_mods, list_patches,
             recomp_status, recomp_build, recomp_cancel, recomp_delete,
-            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
+            save_patches, list_gamepads, list_displays, fsr411_support, add_fsr411_files, read_input, open_path, open_launcher_data, launch, stop, save_online_password, yt_sign_in, yt_sign_up, yt_sign_out, list_saves, list_characters, edit_save, character_inventory, item_catalog, item_icon, change_save, list_profiles, change_profile, database_path, set_tray_labels
         ])
         .on_window_event(|window, event| {
             if window.label() == "main" {
@@ -1384,7 +1436,7 @@ mod save_tests {
         save_operation(&p, &id, "backup", None).unwrap();
         assert_eq!(profiles::selected(&root).unwrap().backups.len(), 3);
         settings.insert("extra_env".into(), json!("BB_USER_DIR=/wrong BB_GPU_USER_DIR=/wrong BB_USER_NAME=wrong BB_TROPHIES_ELIGIBLE=1"));
-        let env: BTreeMap<_,_> = game_environment(&p, &settings, None).unwrap().into_iter().collect();
+        let env: BTreeMap<_,_> = game_environment(&p, &settings, None, None).unwrap().into_iter().collect();
         assert_eq!(env["BB_USER_DIR"], root.join("save-profiles").join(&id).join("user").to_string_lossy());
         assert_eq!(env["BB_GPU_USER_DIR"], root.join("user").to_string_lossy());
         assert_eq!(env["BB_USER_NAME"], "Synthetic");
@@ -1392,12 +1444,12 @@ mod save_tests {
         let user=selected_user_dir(&p).unwrap();
         fs::create_dir_all(user.join("savedata")).unwrap();
         fs::write(user.join("savedata/.bb-edited"),"edited-v1\n").unwrap();
-        let env: BTreeMap<_,_> = game_environment(&p, &settings, None).unwrap().into_iter().collect();
+        let env: BTreeMap<_,_> = game_environment(&p, &settings, None, None).unwrap().into_iter().collect();
         assert_eq!(env["BB_TROPHIES_ELIGIBLE"], "0");
         // Configuration and original save files are never moved by profile creation/selection.
         assert!(!root.join("user").exists());
         fs::remove_dir_all(root.join("save-profiles").join(&id)).unwrap();
-        assert!(game_environment(&p, &settings, None).is_err());
+        assert!(game_environment(&p, &settings, None, None).is_err());
         fs::remove_dir_all(&root).unwrap();
     }
 }
