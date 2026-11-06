@@ -86,12 +86,18 @@ pub fn bash(programs: Option<&Path>) -> PathBuf {
 /// The online module (the runtime's gpu/bbnet20): its file in the package, or in the runtime's
 /// build (out/gpu-arm64 on Apple Silicon, out/gpu elsewhere).
 pub fn net_module(game_root: &Path, packaged: bool) -> PathBuf {
+    net_module_named(game_root, packaged, "bbnet20")
+}
+
+/// An online module by its base name: "bbnet20" (Seamless Hunt, The Hunter's Dream) or "ytcoop"
+/// (BloodOnline: Yharnam Together).
+pub fn net_module_named(game_root: &Path, packaged: bool, base: &str) -> PathBuf {
     let name = if cfg!(target_os = "macos") {
-        "libbbnet20.dylib"
+        format!("lib{base}.dylib")
     } else if cfg!(windows) {
-        "bbnet20.dll"
+        format!("{base}.dll")
     } else {
-        "libbbnet20.so"
+        format!("lib{base}.so")
     };
     if packaged && cfg!(target_os = "macos") {
         return game_root.join("../../Frameworks").join(name);

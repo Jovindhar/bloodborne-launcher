@@ -17,6 +17,7 @@ export function OnlinePage() {
   const active = profiles?.profiles.find((profile) => profile.id === profiles.active);
   const edited = active && !active.trophies_eligible;
   const thd = settings.online_pool === "huntersdream";
+  const yt = settings.online_pool === "yharnamtogether";
   const { data: config } = useConfig();
   const client = useQueryClient();
   const [confirmSave, setConfirmSave] = useState(false);
@@ -37,9 +38,15 @@ export function OnlinePage() {
       <SelectRow title={t("online.pool")} description={t("online.poolHint")}
         value={settings.online_pool}
         options={[{ value: "seamless", label: t("online.seamless"), literal: true },
-                  { value: "huntersdream", label: t("online.huntersDream"), literal: true }]}
+                  { value: "huntersdream", label: t("online.huntersDream"), literal: true },
+                  { value: "yharnamtogether", label: t("online.yharnamTogether"), literal: true }]}
         onChange={(value) => set("online_pool", value)} />
     </SettingsSection>
+    {/* BloodOnline: Yharnam Together (the runtime's gpu/ytcoop module): its own seamless co-op. */}
+    {yt ? <SettingsSection title={t("online.yharnamTogether")} description={t("online.ytHint")}>
+      <TextRow title={t("online.ytHost")} description={t("online.ytHostHint")} value={settings.yt_host}
+        placeholder="192.168.1.20" onChange={(value) => set("yt_host", value.trim())} />
+    </SettingsSection> : <>
     {/* BloodOnline: BBSC seamless co-op (CLS_AMG, from bbport 0.6), with Seamless Hunt only. */}
     <SettingsSection title={t("online.seamlessCoop")} description={t("online.bbscHint")}>
       <SwitchRow title={t("online.bbsc")} description={thd ? t("online.bbscSeamlessOnly") : undefined}
@@ -81,6 +88,7 @@ export function OnlinePage() {
         <TextRow title={t("online.gameServer")} value={settings.online_community}
           onChange={(value) => set("online_community", value)} />
       </SettingsSection>
+    </>}
     </>}
     <SavePasswordDialog open={confirmSave}
       onAccept={() => { setConfirmSave(false); set("online_save_password", true); }}

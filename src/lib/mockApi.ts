@@ -42,6 +42,7 @@ const config: Config = {
     thd_server: "https://thehuntersdream.com",
     thd_online_id: "",
     thd_token: "",
+    yt_host: "",
     check_updates: true,
     crash_diag: false,
     gpu_profile: false,

@@ -19,7 +19,7 @@ export function PlayButton({ className }: { className?: string }) {
   const [askPassword, setAskPassword] = useState(false);
   // Seamless Hunt's password, when the player did not save it, is asked for each launch.
   const settings = config?.settings;
-  const passwordNeeded = !!settings?.online && settings.online_pool !== "huntersdream" && !config?.online_password_saved;
+  const passwordNeeded = !!settings?.online && settings.online_pool === "seamless" && !config?.online_password_saved;
   const start = () => (passwordNeeded ? setAskPassword(true) : void play());
 
   if (running) {

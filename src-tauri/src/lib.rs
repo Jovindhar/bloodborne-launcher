@@ -8,6 +8,8 @@
 //! Mods, third-party patches and the game check come from scripts/launcher_api.py (the same code
 //! run.sh uses), controllers from bb-gpu-capabilities (--gamepads, --read-input). The game runs
 //! as `bash run.sh` with the app's own bash and Python; its output is sent to the window.
+#![recursion_limit = "256"]
+mod yharnam_together;
 mod saves;
 mod character_growth;
 mod save_editor;
@@ -142,6 +144,7 @@ fn default_settings() -> Map<String, Value> {
         "thd_server": "https://thehuntersdream.com",
         "thd_online_id": "",
         "thd_token": "",
+        "yt_host": "",
         "check_updates": true,
         "crash_diag": false,
         "gpu_profile": false,
@@ -397,8 +400,14 @@ fn save_settings(app: AppHandle, state: State<AppState>, settings: Map<String, V
     if settings.get("renderer").is_some_and(|v| !matches!(v.as_str(), Some("moltenvk" | "metal"))) {
         return Err("renderer must be moltenvk or metal.".into());
     }
-    if settings.get("online_pool").is_some_and(|v| !matches!(v.as_str(), Some("seamless" | "huntersdream"))) {
-        return Err("online_pool must be seamless or huntersdream.".into());
+    if settings.get("online_pool").is_some_and(|v| !matches!(v.as_str(), Some("seamless" | "huntersdream" | "yharnamtogether"))) {
+        return Err("online_pool must be seamless, huntersdream or yharnamtogether.".into());
+    }
+    if settings.get("yt_host").is_some_and(|v| v.as_str().map_or(true, |h| !yharnam_together::valid_host(h))) {
+        return Err("The Yharnam Together host must be an IP address or a host name, without a port.".into());
+    }
+    if settings.contains_key("yt_account") || settings.contains_key("yt_secret") {
+        return Err("The Yharnam Together player id is made by the launcher.".into());
     }
     if settings.contains_key("online_password") {
         return Err("The password is saved with save_online_password.".into());
@@ -1035,14 +1044,33 @@ fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>) -
     }
     set("BB_ONLINE", if online { "1" } else { "0" }.into());
     if online {
-        let module = platform::net_module(&p.game_root, p.bundled);
+        let pool = str_setting(s, "online_pool");
+        let module = if pool == "yharnamtogether" {
+            platform::net_module_named(&p.game_root, p.bundled, "ytcoop")
+        } else {
+            platform::net_module(&p.game_root, p.bundled)
+        };
         if !module.is_file() {
             return Err("The online module is missing from this build.".into());
         }
         set("BB_NET_MODULE", module.to_string_lossy().into());
         set("BB_NET_GEN", "20".into());
-        let pool = str_setting(s, "online_pool");
-        if pool == "huntersdream" {
+        if pool == "yharnamtogether" {
+            // BloodOnline: Yharnam Together (gpu/ytcoop). Everyone types the host's address; the
+            // player id is the launcher's own (made once at launch, yharnam_together::player_id).
+            let host = str_setting(s, "yt_host");
+            if host.is_empty() {
+                return Err("Enter the Yharnam Together host's address on the Online page.".into());
+            }
+            let account = str_setting(s, "yt_account");
+            let secret = str_setting(s, "yt_secret");
+            if account.is_empty() || secret.is_empty() {
+                return Err("The Yharnam Together player id is missing.".into());
+            }
+            for (key, value) in yharnam_together::environment(&host, &account, &secret) {
+                set(key, value);
+            }
+        } else if pool == "huntersdream" {
             let name = str_setting(s, "thd_online_id");
             let token = str_setting(s, "thd_token");
             if name.is_empty() || token.is_empty() {
@@ -1092,7 +1120,11 @@ fn start_game(app: &AppHandle, state: &AppState, password: Option<&str>) -> Resu
         return Err("The game is already running.".into());
     }
     saves_idle(&game)?;
-    let s = load_settings(&p);
+    let mut s = load_settings(&p);
+    // Yharnam Together: this player's id on its servers, made once and kept.
+    if str_setting(&s, "online_pool") == "yharnamtogether" && yharnam_together::with_player_id(&mut s) {
+        write_settings(&p, s.clone())?;
+    }
     selected_user_dir(&p)?;
     let registry = profiles::require(&p.data)?;
     fs::create_dir_all(&registry.original_user_dir).map_err(|e| e.to_string())?;

@@ -65,7 +65,11 @@
     "localServer": "Game server on this Mac",
     "localServerAuto": "Only when Seamless Hunt's game server doesn't answer.",
     "localServerOn": "Always: summons still work, but messages and bloodstains are only this Mac's.",
-    "localServerOff": "Never: Seamless Hunt's game server only."
+    "localServerOff": "Never: Seamless Hunt's game server only.",
+    "yharnamTogether": "Yharnam Together",
+    "ytHint": "Seamless co-op with Yharnam Together players (release 1.4.0). One player hosts Yharnam Together’s server on their PC, and everyone, the host included, joins it from the game’s team screen. The host needs TCP ports 31313, 31315 and 20443 and UDP port 31314 open, or everyone on the same VPN (Tailscale, ZeroTier, Radmin VPN). Seamless Hunt’s account and BBSC aren’t used.",
+    "ytHost": "Host’s address",
+    "ytHostHint": "The IP address or name of the PC running the server, without a port."
   },
   "play": {
     "play": "Play",

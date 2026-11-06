@@ -34,7 +34,7 @@ export type Settings = {
    * on the Recompiled code page, used only while it matches the game and the recompiler). */
   cpu: "translated" | "recompiled";
   online: boolean;
-  online_pool: "seamless" | "huntersdream";
+  online_pool: "seamless" | "huntersdream" | "yharnamtogether";
   online_server: string;
   online_webapi: string;
   online_community: string;
@@ -49,6 +49,8 @@ export type Settings = {
   thd_server: string;
   thd_online_id: string;
   thd_token: string;
+  /** BloodOnline: the Yharnam Together host's address (online_pool "yharnamtogether"). */
+  yt_host: string;
   check_updates: boolean;
   crash_diag: boolean;
   gpu_profile: boolean;
