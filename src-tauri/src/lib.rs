@@ -1128,14 +1128,20 @@ fn game_environment(p: &Paths, s: &Map<String, Value>, password: Option<&str>,
 async fn launch(app: AppHandle, state: State<'_, AppState>, password: Option<String>) -> Result<(), String> {
     let state=state.inner().clone();
     // Yharnam Together's Global server: the shard is looked up before the game starts (HTTPS).
-    let s = load_settings(&state.paths);
-    let yt_global = if bool_setting(&s, "online") && str_setting(&s, "online_pool") == "yharnamtogether"
-        && str_setting(&s, "yt_server_type") != "local" {
-        let account = yharnam_together::signed_in(&state.paths.data)
-            .ok_or("Sign in to Yharnam Together's Global server on the Online page first.")?;
-        Some(yharnam_together::resolve(&account).await?)
-    } else {
-        None
+    // The settings are read off the async runtime: the settings store blocks on its own future.
+    let paths = state.paths.clone();
+    let account = blocking(move || {
+        let s = load_settings(&paths);
+        if !(bool_setting(&s, "online") && str_setting(&s, "online_pool") == "yharnamtogether"
+            && str_setting(&s, "yt_server_type") != "local") {
+            return Ok(None);
+        }
+        yharnam_together::signed_in(&paths.data).map(Some)
+            .ok_or_else(|| "Sign in to Yharnam Together's Global server on the Online page first.".to_string())
+    }).await?;
+    let yt_global = match account {
+        Some(account) => Some(yharnam_together::resolve(&account).await?),
+        None => None,
     };
     blocking(move || start_game(&app, &state, password.as_deref(), yt_global.as_ref())).await
 }
