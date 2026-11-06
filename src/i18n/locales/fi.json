@@ -73,7 +73,7 @@
   "play": {
     "play": "Pelaa", "stop": "Pysäytä", "running": "Käynnissä",
     "started": "Peli käynnistyy. Ensimmäisellä kerralla varjostimet käännetään, mikä voi kestää muutaman minuutin.",
-    "failedToStart": "Pelin käynnistäminen epäonnistui.", "failedToStop": "Pelin pysäyttäminen epäonnistui.",
+    "starting": "Connecting…", "failedToStart": "Pelin käynnistäminen epäonnistui.", "failedToStop": "Pelin pysäyttäminen epäonnistui.",
     "exitedWithError": "Peli sulkeutui virheeseen.", "exitCode": "Paluukoodi {{code}}. Katso lisätiedot Loki-välilehdeltä."
   },
   "common": {

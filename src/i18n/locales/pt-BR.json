@@ -92,7 +92,7 @@
     "stop": "Parar",
     "running": "Em execução",
     "started": "Iniciando o jogo. A primeira inicialização compila os shaders e pode levar alguns minutos.",
-    "failedToStart": "Não foi possível iniciar o jogo.",
+    "starting": "Connecting…", "failedToStart": "Não foi possível iniciar o jogo.",
     "failedToStop": "Não foi possível parar o jogo.",
     "exitedWithError": "O jogo fechou com um erro.",
     "exitCode": "Código de saída {{code}}. Veja a aba Log para detalhes."

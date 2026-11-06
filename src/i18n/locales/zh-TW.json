@@ -73,7 +73,7 @@
   "play": {
     "play": "開始遊戲", "stop": "停止", "running": "執行中",
     "started": "正在啟動遊戲。首次啟動會編譯著色器，可能需要幾分鐘。",
-    "failedToStart": "無法啟動遊戲。", "failedToStop": "無法停止遊戲。",
+    "starting": "Connecting…", "failedToStart": "無法啟動遊戲。", "failedToStop": "無法停止遊戲。",
     "exitedWithError": "遊戲因錯誤而關閉。", "exitCode": "結束代碼 {{code}}。詳情請查看「記錄」分頁。"
   },
   "common": {

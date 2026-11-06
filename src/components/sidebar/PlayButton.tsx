@@ -13,7 +13,7 @@ export function PlayButton({ className }: { className?: string }) {
   const { t } = useTranslation();
   const { data: config } = useConfig();
   const check = useGameCheck(config?.settings.game_dir);
-  const { running, play, stop } = useGameStore();
+  const { running, starting, play, stop } = useGameStore();
   const profiles = useProfiles();
   const problem = check.data?.problem;
   const [askPassword, setAskPassword] = useState(false);
@@ -40,13 +40,14 @@ export function PlayButton({ className }: { className?: string }) {
     <button
       type="button"
       onClick={start}
-      disabled={check.isPending || !!problem || profiles.busy || !profiles.data || profiles.data.setup_required}
+      disabled={starting || check.isPending || !!problem || profiles.busy || !profiles.data || profiles.data.setup_required}
       className={cn(
         "flex w-full items-center justify-center gap-2 rounded-xl bg-blood-500/70 py-3 font-display text-sm font-semibold tracking-[0.25em] text-parchment backdrop-blur-sm transition-colors duration-300 ease-out hover:bg-blood-500/90 active:bg-blood-400 disabled:cursor-not-allowed disabled:bg-white/[0.06] disabled:text-muted-foreground",
         className,
       )}
     >
-      {check.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <Play className="size-4 fill-current" />} {t("play.play").toUpperCase()}
+      {check.isPending || starting ? <LoaderCircle className="size-4 animate-spin" /> : <Play className="size-4 fill-current" />}{" "}
+      {(starting ? t("play.starting") : t("play.play")).toUpperCase()}
     </button>
   );
   const prompt = <OnlinePasswordDialog open={askPassword} account={settings?.online_npid ?? ""}

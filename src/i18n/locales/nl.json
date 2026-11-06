@@ -73,7 +73,7 @@
   "play": {
     "play": "Spelen", "stop": "Stoppen", "running": "Actief",
     "started": "Het spel wordt gestart. De eerste keer worden de shaders gecompileerd; dat kan enkele minuten duren.",
-    "failedToStart": "Kon het spel niet starten.", "failedToStop": "Kon het spel niet stoppen.",
+    "starting": "Connecting…", "failedToStart": "Kon het spel niet starten.", "failedToStop": "Kon het spel niet stoppen.",
     "exitedWithError": "Het spel is met een fout afgesloten.", "exitCode": "Afsluitcode {{code}}. Bekijk het tabblad Logboek voor details."
   },
   "common": {

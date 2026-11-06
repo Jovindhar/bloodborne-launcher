@@ -73,7 +73,7 @@
   "play": {
     "play": "Graj", "stop": "Zatrzymaj", "running": "Uruchomiona",
     "started": "Uruchamianie gry. Przy pierwszym uruchomieniu kompilowane są shadery, co może potrwać kilka minut.",
-    "failedToStart": "Nie udało się uruchomić gry.", "failedToStop": "Nie udało się zatrzymać gry.",
+    "starting": "Connecting…", "failedToStart": "Nie udało się uruchomić gry.", "failedToStop": "Nie udało się zatrzymać gry.",
     "exitedWithError": "Gra zamknęła się z błędem.", "exitCode": "Kod wyjścia {{code}}. Szczegóły znajdziesz na karcie Dziennik."
   },
   "common": {

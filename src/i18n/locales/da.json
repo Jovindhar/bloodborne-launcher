@@ -73,7 +73,7 @@
   "play": {
     "play": "Spil", "stop": "Stop", "running": "Kører",
     "started": "Spillet starter. Første gang kompileres shaders, hvilket kan tage et par minutter.",
-    "failedToStart": "Kunne ikke starte spillet.", "failedToStop": "Kunne ikke stoppe spillet.",
+    "starting": "Connecting…", "failedToStart": "Kunne ikke starte spillet.", "failedToStop": "Kunne ikke stoppe spillet.",
     "exitedWithError": "Spillet lukkede med en fejl.", "exitCode": "Afslutningskode {{code}}. Se fanen Log for detaljer."
   },
   "common": {

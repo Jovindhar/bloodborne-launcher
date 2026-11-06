@@ -73,7 +73,7 @@
   "play": {
     "play": "Spela", "stop": "Stoppa", "running": "Körs",
     "started": "Spelet startar. Första gången kompileras shaders, vilket kan ta några minuter.",
-    "failedToStart": "Kunde inte starta spelet.", "failedToStop": "Kunde inte stoppa spelet.",
+    "starting": "Connecting…", "failedToStart": "Kunde inte starta spelet.", "failedToStop": "Kunde inte stoppa spelet.",
     "exitedWithError": "Spelet avslutades med ett fel.", "exitCode": "Avslutningskod {{code}}. Se fliken Logg för detaljer."
   },
   "common": {

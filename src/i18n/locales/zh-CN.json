@@ -73,7 +73,7 @@
   "play": {
     "play": "开始游戏", "stop": "停止", "running": "运行中",
     "started": "正在启动游戏。首次启动会编译着色器，可能需要几分钟。",
-    "failedToStart": "无法启动游戏。", "failedToStop": "无法停止游戏。",
+    "starting": "Connecting…", "failedToStart": "无法启动游戏。", "failedToStop": "无法停止游戏。",
     "exitedWithError": "游戏因错误而关闭。", "exitCode": "退出代码 {{code}}。详情请查看“日志”标签页。"
   },
   "common": {

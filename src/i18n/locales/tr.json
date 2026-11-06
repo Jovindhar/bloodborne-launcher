@@ -73,7 +73,7 @@
   "play": {
     "play": "Oyna", "stop": "Durdur", "running": "Çalışıyor",
     "started": "Oyun başlatılıyor. İlk başlatmada gölgelendiriciler derlenir ve birkaç dakika sürebilir.",
-    "failedToStart": "Oyun başlatılamadı.", "failedToStop": "Oyun durdurulamadı.",
+    "starting": "Connecting…", "failedToStart": "Oyun başlatılamadı.", "failedToStop": "Oyun durdurulamadı.",
     "exitedWithError": "Oyun bir hatayla kapandı.", "exitCode": "Çıkış kodu {{code}}. Ayrıntılar için Günlük sekmesine bakın."
   },
   "common": {

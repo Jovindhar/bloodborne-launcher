@@ -95,7 +95,7 @@
     "stop": "Stop",
     "running": "Running",
     "started": "Starting the game. The first launch compiles its shaders and may take a few minutes.",
-    "failedToStart": "Couldn’t start the game.",
+    "starting": "Connecting…", "failedToStart": "Couldn’t start the game.",
     "failedToStop": "Couldn’t stop the game.",
     "exitedWithError": "The game closed with an error.",
     "exitCode": "Exit code {{code}}. Check the Log tab for details."

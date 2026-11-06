@@ -73,7 +73,7 @@
   "play": {
     "play": "Jouer", "stop": "Arrêter", "running": "En cours",
     "started": "Lancement du jeu. Le premier lancement compile les shaders et peut prendre quelques minutes.",
-    "failedToStart": "Impossible de lancer le jeu.", "failedToStop": "Impossible d’arrêter le jeu.",
+    "starting": "Connecting…", "failedToStart": "Impossible de lancer le jeu.", "failedToStop": "Impossible d’arrêter le jeu.",
     "exitedWithError": "Le jeu s’est fermé avec une erreur.", "exitCode": "Code de sortie {{code}}. Consultez l’onglet Journal pour plus de détails."
   },
   "common": {

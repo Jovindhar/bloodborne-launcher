@@ -206,13 +206,13 @@ pub fn solve(challenge: &str, name: &str, bits: u32) -> Result<u64, String> {
     unreachable!()
 }
 
-fn client() -> Result<reqwest::Client, String> {
+fn client(timeout: Duration) -> Result<reqwest::Client, String> {
     // HTTPS only, the system's certificates, no redirects: a password never goes anywhere else.
     reqwest::Client::builder()
         .https_only(true)
         .redirect(reqwest::redirect::Policy::none())
         .connect_timeout(Duration::from_secs(10))
-        .timeout(Duration::from_secs(30))
+        .timeout(timeout)
         .user_agent(concat!("bloodborne-launcher/", env!("CARGO_PKG_VERSION")))
         .build()
         .map_err(|e| e.to_string())
@@ -220,7 +220,12 @@ fn client() -> Result<reqwest::Client, String> {
 
 /// (status, answer) of `path` on the Global server: a GET without a body, else a JSON POST.
 async fn call(path: &str, body: Option<Value>) -> Result<(u16, Value), String> {
-    let client = client()?;
+    call_within(path, body, Duration::from_secs(30)).await
+}
+
+/// The same with a shorter wait (the lookup at Play: 10 s, as Yharnam Together's launcher waits).
+async fn call_within(path: &str, body: Option<Value>, timeout: Duration) -> Result<(u16, Value), String> {
+    let client = client(timeout)?;
     let url = format!("{GLOBAL_SERVER}{path}");
     let request = match body {
         Some(body) => client.post(&url).header("Content-Type", "application/json").body(body.to_string()),
@@ -344,9 +349,10 @@ pub fn pick_shard(shards: &[Value], own: Option<&Value>) -> Option<Value> {
 /// names, or the server itself when it has no directory.
 pub async fn resolve(account: &GlobalAccount) -> Result<GlobalTarget, String> {
     let down = || format!("The region's directory {GLOBAL_SERVER} does not answer: try again in a minute.");
-    let (status, listed) = call("/v1/shards", None).await.map_err(|_| down())?;
+    let quick = Duration::from_secs(10);
+    let (status, listed) = call_within("/v1/shards", None, quick).await.map_err(|e| format!("{} ({e})", down()))?;
     if status == 200 {
-        let (_, where_) = call(&format!("/v1/where?player={}", account.id), None).await.map_err(|_| down())?;
+        let (_, where_) = call_within(&format!("/v1/where?player={}", account.id), None, quick).await.map_err(|e| format!("{} ({e})", down()))?;
         let shards = listed.get("shards").and_then(Value::as_array).cloned().unwrap_or_default();
         let shard = pick_shard(&shards, where_.get("shard"))
             .ok_or_else(|| format!("No shard of the region {GLOBAL_SERVER} has room right now: try again in a minute."))?;

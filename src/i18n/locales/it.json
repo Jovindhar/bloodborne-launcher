@@ -73,7 +73,7 @@
   "play": {
     "play": "Gioca", "stop": "Ferma", "running": "In esecuzione",
     "started": "Avvio del gioco. Il primo avvio compila gli shader e può richiedere alcuni minuti.",
-    "failedToStart": "Impossibile avviare il gioco.", "failedToStop": "Impossibile chiudere il gioco.",
+    "starting": "Connecting…", "failedToStart": "Impossibile avviare il gioco.", "failedToStop": "Impossibile chiudere il gioco.",
     "exitedWithError": "Il gioco si è chiuso con un errore.", "exitCode": "Codice di uscita {{code}}. Consulta la scheda Registro per i dettagli."
   },
   "common": {

@@ -73,7 +73,7 @@
   "play": {
     "play": "Jugar", "stop": "Detener", "running": "En ejecución",
     "started": "Iniciando el juego. El primer inicio compila los shaders y puede tardar unos minutos.",
-    "failedToStart": "No se pudo iniciar el juego.", "failedToStop": "No se pudo detener el juego.",
+    "starting": "Connecting…", "failedToStart": "No se pudo iniciar el juego.", "failedToStop": "No se pudo detener el juego.",
     "exitedWithError": "El juego se cerró con un error.", "exitCode": "Código de salida {{code}}. Consulta la pestaña Registro para ver los detalles."
   },
   "common": {

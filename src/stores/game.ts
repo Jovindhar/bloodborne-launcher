@@ -12,6 +12,8 @@ const TROPHY_RECORDED = /^Runtime: trophy \d+ unlocked/;
 const SETTING_CHANGED = /^BBSET \S+=/;
 
 type GameStore = {
+  /** Play was pressed and the launch has not answered yet (an online lookup can take seconds). */
+  starting: boolean;
   running: boolean;
   /** Exit code of the last run (null: killed by a signal), undefined before any run ends. */
   lastExit: number | null | undefined;
@@ -27,16 +29,19 @@ type GameStore = {
 
 export const useGameStore = create<GameStore>((set) => ({
   running: false,
+  starting: false,
   lastExit: undefined,
   log: [],
   startedAt: null,
   play: async (password) => {
-    set({ log: [], lastExit: undefined });
+    set({ log: [], lastExit: undefined, starting: true });
     try {
       await api.launch(password);
       set({ running: true, startedAt: Date.now() });
     } catch (error) {
       toast.error(i18n.t("play.failedToStart"), { description: String(error) });
+    } finally {
+      set({ starting: false });
     }
   },
   stop: async () => {

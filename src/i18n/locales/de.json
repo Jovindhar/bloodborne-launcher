@@ -73,7 +73,7 @@
   "play": {
     "play": "Spielen", "stop": "Beenden", "running": "Läuft",
     "started": "Das Spiel wird gestartet. Beim ersten Start werden die Shader kompiliert; das kann einige Minuten dauern.",
-    "failedToStart": "Das Spiel konnte nicht gestartet werden.", "failedToStop": "Das Spiel konnte nicht beendet werden.",
+    "starting": "Connecting…", "failedToStart": "Das Spiel konnte nicht gestartet werden.", "failedToStop": "Das Spiel konnte nicht beendet werden.",
     "exitedWithError": "Das Spiel wurde mit einem Fehler beendet.", "exitCode": "Exit-Code {{code}}. Details findest du im Tab Protokoll."
   },
   "common": {
